@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: fastcs-gatan
+  title: fastcs-gatan
+  description: Gatan K3 detector control system integration with FastCS
+spec:
+  type: service
+  lifecycle: experimental
+  owner: user:TODO # set to the actual component owner before this is registered

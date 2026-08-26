@@ -1,0 +1,38 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## What this is
+
+A FastCS driver for Gatan K3 detectors, structurally modeled on `/workspaces/fastcs-eiger`. **Partially implemented** (as of 2026-08-17): connection management, status/capability queries, camera enumeration/selection/insertion, read-mode/shutter settings, and single-frame acquisition are real and tested against a loopback socket. K2/K3 parameter configuration, continuous acquisition, and dose-fractionation-to-disk are still `NotImplementedError` stubs. See `src/fastcs_gatan/connection/gatan_socket.py`'s docstring for exactly what's left.
+
+## Scope (decided 2026-08-17, see `/workspaces/CLAUDE.md` and this session's project memory for full detail)
+
+- **No runtime dependency on `GatanDetectorClient-0.1.0`.** Its `gatan_client/gatan_socket.py` (Apache-2.0) is the direct porting basis for this repo's own `connection/gatan_socket.py`, cross-checked against the MIT-licensed `/workspaces/SerialEM/BaseSocket.cpp` + `GatanSocket.cpp` + `Shared/SEMCCDDefines.h`. `/workspaces/SerialEMCCD` (GPL-2) is cite-only for server-side behavior, never copied from.
+- **Three acquisition modes, and only these three**: single-frame `acquire_image`, continuous acquisition, and dose-fractionation where sub-frames are written to storage on the DM machine only (never transferred over this socket — the client gets back one summed frame plus a saved-frame-count/error readback via `GetFileSaveResult`).
+- **Also in scope**: full camera enumeration/selection/insertion, and full K2/K3 read-mode/parameter select+query support — not just whatever the three acquisition modes strictly require.
+- **Explicitly out of scope for now**: dark/gain reference acquisition (not yet confirmed either way — ask before adding), DM scripting (`ExecuteScript`), DigiScan/STEM, frame alignment.
+- **Resolved**: `SET_CURRENT_CAMERA` and `SELECT_CAMERA` are both legitimate distinct wire calls, not an either/or ambiguity. `CameraController.select()` uses `set_current_camera` (matches `CameraBackend.set_current_camera`'s call site in GatanDetectorClient's own adapter); `select_camera` also exists on the connection as a lower-level alternative.
+
+## Commands
+
+Same tooling as `fastcs`/`fastcs-eiger` (uv-managed venv, or `pip install -e '.[dev]'`); see those repos' `CLAUDE.md` for the full command list (`pytest`, `ruff check/format`, `pyright`, `tox -p`). Note: `pyproject.toml` sets `fallback_version = "0.0.0"` for `setuptools_scm` since this repo has no git tags yet — remove that once real release history exists.
+
+## Architecture
+
+Mirrors `fastcs-eiger`'s shape, narrowed to the approved scope. **Diverges from fastcs-eiger in the CLI/launch pattern** — see the note under `__main__.py` below; the local `/workspaces/fastcs` checkout's API has moved on from what `fastcs-eiger` (pinned to an older release) uses.
+
+- `connection/gatan_socket.py` — `GatanSocketConnection`, the TCP client for the GatanSocket wire protocol, ported by hand from `GatanDetectorClient-0.1.0/gatan_client/gatan_socket.py` (Apache-2.0; attribution in this repo's `NOTICE` file). **Implemented**: connect/disconnect, wire framing (`_pack_request`/`_exchange`/`_exchange_image`), status/capability queries (`get_dm_version`, `get_dm_version_and_build`, `get_plugin_version`, `get_last_error`, `get_last_dose_rate`, `get_dm_capabilities`), camera enumeration/selection/insertion (`get_number_of_cameras`, `is_camera_inserted`, `insert_camera`, `select_camera`, `set_current_camera`), mode/settings (`set_read_mode`, `set_shutter_normally_closed`, `set_no_dm_settling`), and single-frame acquisition (`get_acquired_image`, with correct chunked-transfer + `CHUNK_HANDSHAKE` handling). **Still `NotImplementedError` stubs**: `set_k2_parameters2`, `stop_continuous_camera`, `setup_file_saving2`, `get_file_save_result`. `FunctionCode` (an `IntEnum`) pins the `GS_*` codes; `tests/test_gatan_socket.py` regression-tests those values against `SEMCCDDefines.h` (a transcription typo — `GET_DM_VERSION_AND_BUILD` off by one — was caught once already; check that test before changing any code value). `tests/test_gatan_socket_wire.py` exercises the implemented calls end-to-end over a loopback `socket.socketpair()` (no server needed) — 4 tests, all passing.
+- `controllers/gatan_controller.py` — root `Controller`. Owns the `GatanSocketConnection`, exposes top-level status attributes (DM/plugin version, last error, last dose rate), and adds `camera`/`acquisition` sub-controllers in `initialise()`. Unlike fastcs-eiger's `EigerController`, there's no self-describing parameter list to introspect — the attribute set is fixed at class-definition time.
+- `controllers/camera_controller.py` — `CameraController`: camera count/current-camera/insertion-state attributes, `select`/`insert`/`retract` commands, all wired to real connection calls now. `insert`/`retract` poll for the resulting state with a configurable timeout (mirrors fastcs-eiger's `arm_when_ready` pattern) because insertion is slow (~10s) and moves real hardware.
+- `controllers/acquisition_controller.py` — `AcquisitionController`: K2/K3 mode/parameter attributes, single-frame `acquire_image` (real, wired to `get_acquired_image`), `start_continuous`/`stop_continuous` (still raise — deferred), and `acquire_dose_fractionated` (still raises via the underlying `NotImplementedError` connection stubs — deferred). `acquire_image` currently does a naive `uint16` decode of the returned bytes with a TODO flagging the protocol's genuine signed/unsigned ambiguity (see `GatanDetectorClient`'s `dtype_probe` diagnostics) — not yet resolved.
+- `__main__.py` — CLI entrypoint via `fastcs.launch.launch(GatanController, version=__version__)`, **not** a hand-built `typer` app with an explicit `EpicsCATransport`/`ioc` subcommand like `fastcs-eiger`'s. Discovery: this workspace's local `/workspaces/fastcs` checkout has moved past the fastcs-eiger-pinned release — `EpicsIOCOptions` no longer exists (now `EpicsCAOptions`, which no longer takes `pv_prefix`) and `EpicsGUIOptions` takes `output_dir`/`file_format`, not `output_path`. The current API is YAML-config-driven: `launch()` introspects `GatanController.__init__`'s type hints and generates a CLI with `schema` (print config schema) and `run <config.yaml>` subcommands — transport(s) and `connection_settings` come from that YAML, not CLI flags. **If this drifts again, re-check against the actual local `fastcs` source, not `fastcs-eiger`'s pattern** — `fastcs-eiger`'s `pyproject.toml`/`uv.lock` pin an older fastcs than what's checked out live in this workspace.
+- `NOTICE` — Apache-2.0 attribution for the ported `gatan_socket.py` code (Kyle Dent / GatanDetectorClient).
+
+## Known gaps / next steps
+
+1. Implement `set_k2_parameters2`, `stop_continuous_camera`, `setup_file_saving2`, `get_file_save_result` on the connection (the remaining porting work — same source file, same NOTICE attribution needed).
+2. Implement `start_continuous`'s streaming loop (needs an async task/`@scan`, not the single-call placeholder currently there).
+3. Decide the signed/unsigned 16-bit decode strategy for acquired frames in `AcquisitionController.acquire_image`.
+4. Validate the implemented calls against `GatanDetectorClient-0.1.0`'s mock server (`gatan_client.mock_server`, run via `PYTHONPATH`, not installed) as a closer-to-real hardware-free test target than the loopback-socketpair tests.
+5. `git init` has been run in this repo (plain local repo, no remote yet) — `catalog-info.yaml`/`pyproject.toml` still have `TODO` author/owner placeholders; fill in before pushing anywhere real.

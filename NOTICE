@@ -1,0 +1,18 @@
+fastcs-gatan
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+src/fastcs_gatan/connection/gatan_socket.py's wire-protocol implementation
+(message framing, argument packing, chunked image transfer, and the GS_*
+function-code enum) is ported from GatanDetectorClient's
+gatan_client/gatan_socket.py, Copyright 2026 Kyle Dent, licensed under the
+Apache License, Version 2.0: https://github.com/ (GatanDetectorClient).
+That file is itself an independent, clean-room re-implementation of the
+SerialEMCCD "GatanSocket" TCP/IP wire protocol, written from the MIT-licensed
+SerialEM socket *client* code and the public byte-level protocol
+specification — not from any GPL-licensed SerialEMCCD *plugin* source.
+
+This product references, but does not include or copy from, the following
+third-party works:
+  - SerialEM (MIT)        https://github.com/mastcu/SerialEM
+  - SerialEMCCD (GPL v2)  https://github.com/mastcu/SerialEMCCD  (not copied from)
