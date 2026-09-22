@@ -1,0 +1,11 @@
+# Local trial config: mock GatanSocket server on this machine.
+# Start the mock first:  python -m gatan_client.mock_server --k3 -v
+controllers:
+  - id: GATAN
+    type: fastcs_gatan.GatanController
+    ip: 127.0.0.1
+    port: 48890
+transport:
+  - rest:
+      host: localhost
+      port: 8080
