@@ -140,3 +140,16 @@ async def test_dose_fractionated_frame_count_mismatch_is_reported():
     assert acq.dose_frac_state.get() is DoseFracState.DONE
     assert acq.frames_saved.get() == 18
     assert "requested 20 frames, camera saved 18" in acq.dose_frac_message.get()
+
+
+def test_attribute_descriptions_fit_epics_desc_field():
+    """EPICS CA puts each description in the record's DESC field, which holds
+    at most 40 characters; a longer one stops the IOC from starting."""
+    from fastcs.attributes import Attribute
+
+    from fastcs_gatan.controllers.camera_controller import CameraController
+
+    for cls in (GatanController, CameraController, AcquisitionController):
+        for name, attr in vars(cls).items():
+            if isinstance(attr, Attribute) and attr.description:
+                assert len(attr.description) <= 40, f"{cls.__name__}.{name}"

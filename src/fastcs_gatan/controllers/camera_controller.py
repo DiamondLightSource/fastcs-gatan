@@ -35,7 +35,7 @@ class CameraController(Controller):
     insertion_timeout = AttrRW(
         Int(min=1),
         initial_value=30,
-        description="Seconds to wait for insert/retract to complete",
+        description="Seconds to wait for insert/retract",
         group=INSERTION_GROUP,
     )
     insertion_poll_period = AttrRW(

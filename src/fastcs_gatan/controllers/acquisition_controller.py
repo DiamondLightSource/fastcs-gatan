@@ -88,7 +88,7 @@ class AcquisitionController(Controller):
         Bool(),
         initial_value=False,
         group=MODE_GROUP,
-        description="Frame alignment is out of v1 scope — keep False",
+        description="Frame alignment: out of scope, keep off",
     )
     rotation_flip = AttrRW(Int(), initial_value=0, group=MODE_GROUP)
 
@@ -101,7 +101,7 @@ class AcquisitionController(Controller):
         Int(),
         initial_value=0,
         group=ACQUIRE_GROUP,
-        description="GetAcquiredImage processing flags (gain-normalised etc.)",
+        description="0=unprocessed 1=dark-sub 2=gain-norm",
     )
     shutter = AttrRW(Int(), initial_value=0, group=ACQUIRE_GROUP)
     last_frame = AttrR(
@@ -124,7 +124,7 @@ class AcquisitionController(Controller):
         Float(min=0),
         initial_value=2.0,
         group=SAVING_GROUP,
-        description="Total exposure time (s), split evenly over the frames",
+        description="Total exposure (s), split over frames",
     )
     dose_frac_state = AttrR(Enum(DoseFracState), group=SAVING_GROUP)
     dose_frac_busy = AttrR(
@@ -134,7 +134,7 @@ class AcquisitionController(Controller):
     saved_path = AttrR(
         String(),
         group=SAVING_GROUP,
-        description="Frame file written by the last exposure — on the DM machine",
+        description="Frame file of last exposure, on DM PC",
     )
     dose_frac = AttrRW(Bool(), initial_value=False, group=SAVING_GROUP)
     frame_time = AttrRW(Float(min=0), initial_value=0.05, group=SAVING_GROUP)
@@ -143,7 +143,7 @@ class AcquisitionController(Controller):
         String(),
         initial_value="",
         group=SAVING_GROUP,
-        description="Path ON THE DM MACHINE — not local to this IOC",
+        description="Folder on the DM PC, not this IOC",
     )
     save_root_name = AttrRW(String(), initial_value="gatan", group=SAVING_GROUP)
     save_pixel_size = AttrRW(Float(min=0), initial_value=1.0, group=SAVING_GROUP)

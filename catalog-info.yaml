@@ -3,7 +3,7 @@ kind: Component
 metadata:
   name: fastcs-gatan
   title: fastcs-gatan
-  description: Gatan K3 detector control system integration with FastCS
+  description: Gatan K3 detector driver in FastCS, acting as a client to the SerialEMCCD plugin on the DigitalMicrograph computer
 spec:
   type: service
   lifecycle: experimental
