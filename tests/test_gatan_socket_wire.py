@@ -315,3 +315,20 @@ def test_exclusive_rejects_other_threads():
 )
 def test_saved_frames_path(flags, file_per_image, expected):
     assert saved_frames_path("D:\\frames", "m1", flags, file_per_image) == expected
+
+
+def test_broken_connection_fails_fast_without_reconnecting():
+    """If the plugin drops the connection (e.g. another client connected),
+    the call fails at once, the socket is closed, and nothing is retried."""
+    client_sock, server_sock = socket.socketpair()
+    conn = _connection_over(client_sock)
+    connects: list[int] = []
+    conn.connect = lambda: connects.append(1)  # type: ignore[method-assign]
+    server_sock.close()  # the plugin drops us
+
+    with pytest.raises(GatanSocketError, match="lost connection"):
+        conn.get_dm_version()
+    assert conn.connected is False
+    assert connects == []  # no reconnect attempt
+    with pytest.raises(GatanSocketError, match="not connected"):
+        conn.get_dm_version()

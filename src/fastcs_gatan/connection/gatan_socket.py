@@ -172,6 +172,11 @@ class GatanSocketError(RuntimeError):
     """Raised when the plugin returns a non-zero status or the link fails."""
 
 
+class _ConnectionLostError(GatanSocketError):
+    """The plugin closed the connection (e.g. because another client connected:
+    the plugin serves one client at a time and drops the old one)."""
+
+
 class GatanSocketConnection:
     """Client for the GatanSocket wire protocol.
 
@@ -251,6 +256,23 @@ class GatanSocketConnection:
             raise GatanSocketError("not connected")
         return self._sock
 
+    def _request(self, packet: bytes, timeout: float) -> bytes:
+        """Send one request and return the reply body after its length word.
+
+        A broken connection is not retried: the socket is closed and the call
+        fails, so a running exposure aborts and later calls fail fast with
+        "not connected".
+        """
+        sock = self._socket()
+        sock.settimeout(timeout)
+        try:
+            sock.sendall(packet)
+            total = struct.unpack("<i", self._recv_exact(4))[0]
+            return self._recv_exact(total - 4)
+        except (OSError, _ConnectionLostError) as exc:
+            self.disconnect()
+            raise GatanSocketError(f"lost connection to plugin: {exc}") from exc
+
     def _recv_exact(self, n: int) -> bytes:
         sock = self._socket()
         chunks: list[bytes] = []
@@ -258,7 +280,7 @@ class GatanSocketConnection:
         while got < n:
             block = sock.recv(n - got)
             if not block:
-                raise GatanSocketError("connection closed by plugin")
+                raise _ConnectionLostError("connection closed by plugin")
             chunks.append(block)
             got += len(block)
         return b"".join(chunks)
@@ -298,10 +320,10 @@ class GatanSocketConnection:
         ``longs`` excludes the status word.
         """
         with self._claim():
-            sock = self._socket()
-            sock.sendall(self._pack_request(func_code, longs, bools, doubles, array))
-            total = struct.unpack("<i", self._recv_exact(4))[0]
-            rest = self._recv_exact(total - 4)
+            rest = self._request(
+                self._pack_request(func_code, longs, bools, doubles, array),
+                self.timeout,
+            )
 
         n_long = n_long_ret + 1  # +1 for the status word
         off = 0
@@ -338,13 +360,12 @@ class GatanSocketConnection:
         array: bytes,
         bytes_per_pixel: int,
     ) -> tuple[int, int, bytes]:
-        sock = self._socket()
-        old_timeout = sock.gettimeout()
-        sock.settimeout(self.acq_timeout)
         try:
-            sock.sendall(self._pack_request(func_code, longs, (), doubles, array))
-            total = struct.unpack("<i", self._recv_exact(4))[0]
-            rest = self._recv_exact(total - 4)
+            rest = self._request(
+                self._pack_request(func_code, longs, (), doubles, array),
+                self.acq_timeout,
+            )
+            sock = self._socket()
             n = len(rest) // 4
             vals = struct.unpack_from(f"<{n}i", rest, 0)
             status = vals[0]
@@ -364,16 +385,23 @@ class GatanSocketConnection:
             data = bytearray()
             chunk_size = (num_bytes + num_chunks - 1) // max(num_chunks, 1)
             received = 0
-            for chunk in range(num_chunks):
-                if chunk:
-                    # bare handshake so the server releases the next chunk
-                    sock.sendall(self._pack_request(FunctionCode.CHUNK_HANDSHAKE))
-                want = min(num_bytes - received, chunk_size)
-                data += self._recv_exact(want)
-                received += want
+            try:
+                for chunk in range(num_chunks):
+                    if chunk:
+                        # bare handshake so the server releases the next chunk
+                        sock.sendall(self._pack_request(FunctionCode.CHUNK_HANDSHAKE))
+                    want = min(num_bytes - received, chunk_size)
+                    data += self._recv_exact(want)
+                    received += want
+            except (OSError, _ConnectionLostError) as exc:
+                self.disconnect()
+                raise GatanSocketError(
+                    f"lost connection to plugin during image transfer: {exc}"
+                ) from exc
             return width, height, bytes(data)
         finally:
-            sock.settimeout(old_timeout)
+            if self._sock is not None:
+                self._sock.settimeout(self.timeout)
 
     @staticmethod
     def _check(status: int, what: str) -> None:

@@ -32,9 +32,11 @@ ACQUIRE_GROUP = "Acquire"
 CONTINUOUS_GROUP = "Continuous"
 SAVING_GROUP = "FrameSaving"
 
-# TODO: this is a placeholder cap, not a real sensor size — replace once a
-# camera config lookup (cf. GatanDetectorClient's cameras.json) exists.
-_MAX_FRAME_SHAPE = (4096, 4096)
+# (rows, columns). Fits a full K3 frame at physical pixel size (4092 x 5760,
+# e.g. counting with K2_TAKE_BINNED_FRAMES), not a super-resolution one.
+# TODO: replace once a camera config lookup (cf. GatanDetectorClient's
+# cameras.json) exists.
+_MAX_FRAME_SHAPE = (4096, 5760)
 
 
 class DoseFracState(enum.Enum):
@@ -64,10 +66,18 @@ class _DoseFracRequest:
     processing: int
     binning: int
     shutter: int
+    k2_flags: int
+    frame_time_override: float  # 0 = exposure / num_frames
 
     @property
     def frame_time(self) -> float:
+        if self.frame_time_override > 0:
+            return self.frame_time_override
         return self.exposure / self.num_frames
+
+    @property
+    def expected_frames(self) -> int:
+        return max(1, round(self.exposure / self.frame_time))
 
 
 @dataclass(frozen=True)
@@ -82,7 +92,7 @@ class _DoseFracResult:
 class AcquisitionController(Controller):
     # ---- Read mode / K2-K3 parameter select+query ----
     read_mode = AttrRW(Int(), group=MODE_GROUP, description="K2/K3 read mode")
-    scaling = AttrRW(Float(), initial_value=1.0, group=MODE_GROUP)
+    scaling = AttrRW(Float(prec=6), initial_value=1.0, group=MODE_GROUP)
     hardware_proc = AttrRW(Int(), initial_value=0, group=MODE_GROUP)
     align_frames = AttrRW(
         Bool(),
@@ -91,11 +101,17 @@ class AcquisitionController(Controller):
         description="Frame alignment: out of scope, keep off",
     )
     rotation_flip = AttrRW(Int(), initial_value=0, group=MODE_GROUP)
+    k2_flags = AttrRW(
+        Int(),
+        initial_value=0,
+        group=MODE_GROUP,
+        description="SetK2Parameters2 flags, 32=binned frames",
+    )
 
     # ---- Single-frame / continuous acquisition parameters ----
     width = AttrRW(Int(min=1), initial_value=1024, group=ACQUIRE_GROUP)
     height = AttrRW(Int(min=1), initial_value=1024, group=ACQUIRE_GROUP)
-    exposure = AttrRW(Float(min=0), initial_value=0.1, group=ACQUIRE_GROUP)
+    exposure = AttrRW(Float(min=0, prec=6), initial_value=0.1, group=ACQUIRE_GROUP)
     binning = AttrRW(Int(min=1), initial_value=1, group=ACQUIRE_GROUP)
     processing = AttrRW(
         Int(),
@@ -121,10 +137,16 @@ class AcquisitionController(Controller):
     # stack on the DM machine unless save_format_flags says otherwise.
     dose_frac_num_frames = AttrRW(Int(min=1), initial_value=40, group=SAVING_GROUP)
     dose_frac_exposure = AttrRW(
-        Float(min=0),
+        Float(min=0, prec=6),
         initial_value=2.0,
         group=SAVING_GROUP,
         description="Total exposure (s), split over frames",
+    )
+    dose_frac_frame_time = AttrRW(
+        Float(min=0, prec=6),
+        initial_value=0.0,
+        group=SAVING_GROUP,
+        description="Frame time (s); 0 = exposure / frames",
     )
     dose_frac_state = AttrR(Enum(DoseFracState), group=SAVING_GROUP)
     dose_frac_busy = AttrR(
@@ -137,7 +159,7 @@ class AcquisitionController(Controller):
         description="Frame file of last exposure, on DM PC",
     )
     dose_frac = AttrRW(Bool(), initial_value=False, group=SAVING_GROUP)
-    frame_time = AttrRW(Float(min=0), initial_value=0.05, group=SAVING_GROUP)
+    frame_time = AttrRW(Float(min=0, prec=6), initial_value=0.05, group=SAVING_GROUP)
     save_frames = AttrRW(Bool(), initial_value=False, group=SAVING_GROUP)
     save_dir = AttrRW(
         String(),
@@ -146,7 +168,9 @@ class AcquisitionController(Controller):
         description="Folder on the DM PC, not this IOC",
     )
     save_root_name = AttrRW(String(), initial_value="gatan", group=SAVING_GROUP)
-    save_pixel_size = AttrRW(Float(min=0), initial_value=1.0, group=SAVING_GROUP)
+    save_pixel_size = AttrRW(
+        Float(min=0, prec=6), initial_value=1.0, group=SAVING_GROUP
+    )
     save_format_flags = AttrRW(Int(), initial_value=0, group=SAVING_GROUP)
     frames_saved = AttrR(Int(), group=SAVING_GROUP)
     save_error = AttrR(Int(), group=SAVING_GROUP)
@@ -178,7 +202,7 @@ class AcquisitionController(Controller):
             align_frames=self.align_frames.get(),
             save_frames=self.save_frames.get(),
             rotation_flip=self.rotation_flip.get(),
-            flags=0,
+            flags=self.k2_flags.get(),
         )
 
     @command(group=ACQUIRE_GROUP)
@@ -238,6 +262,8 @@ class AcquisitionController(Controller):
             processing=self.processing.get(),
             binning=self.binning.get(),
             shutter=self.shutter.get(),
+            k2_flags=self.k2_flags.get(),
+            frame_time_override=self.dose_frac_frame_time.get(),
         )
         if request.exposure <= 0:
             raise ValueError("dose_frac_exposure must be positive")
@@ -275,17 +301,21 @@ class AcquisitionController(Controller):
             )
             await self.dose_frac_state.update(DoseFracState.FAILED)
         else:
-            if result.num_saved != request.num_frames:
+            if result.num_saved != request.expected_frames:
                 # The camera silently clamps frame times it can't achieve.
                 await self.dose_frac_message.update(
-                    f"requested {request.num_frames} frames, "
+                    f"requested {request.expected_frames} frames, "
                     f"camera saved {result.num_saved}"
                 )
             await self.dose_frac_state.update(DoseFracState.DONE)
         try:
             await self._update_last_frame(result.width, result.height, result.raw)
         except Exception as e:
-            await self.dose_frac_message.update(f"summed image not stored: {e}")
+            note = f"summed image not stored: {e}"
+            earlier = self.dose_frac_message.get()
+            await self.dose_frac_message.update(
+                f"{earlier}; {note}" if earlier else note
+            )
         finally:
             await self.dose_frac_busy.update(False)
 
@@ -306,7 +336,7 @@ class AcquisitionController(Controller):
                 align_frames=False,
                 save_frames=dose_frac,
                 rotation_flip=request.rotation_flip,
-                flags=0,
+                flags=request.k2_flags,
             )
 
         with conn.exclusive():
