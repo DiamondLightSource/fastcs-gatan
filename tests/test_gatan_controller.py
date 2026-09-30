@@ -153,3 +153,16 @@ def test_attribute_descriptions_fit_epics_desc_field():
         for name, attr in vars(cls).items():
             if isinstance(attr, Attribute) and attr.description:
                 assert len(attr.description) <= 40, f"{cls.__name__}.{name}"
+
+
+@pytest.mark.asyncio
+async def test_float_settings_keep_full_precision():
+    """fastcs rounds a Float to its ``prec`` (default 2 decimal places); a K3
+    frame time like 0.013316 s must reach the plugin unchanged."""
+    acq = AcquisitionController(_FakeConnection())  # type: ignore[arg-type]
+    await acq.dose_frac_frame_time.put(0.013316, sync_setpoint=True)
+    await acq.dose_frac_exposure.put(0.105, sync_setpoint=True)
+    await acq.scaling.put(0.125, sync_setpoint=True)
+    assert acq.dose_frac_frame_time.get() == 0.013316
+    assert acq.dose_frac_exposure.get() == 0.105
+    assert acq.scaling.get() == 0.125
