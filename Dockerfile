@@ -1,6 +1,11 @@
-# The devcontainer should use the developer target and run as root with podman
-# or docker with user namespaces.
-FROM ghcr.io/diamondlightsource/ubuntu-devcontainer:noble AS developer
+ARG IMAGE_EXT
+
+ARG REGISTRY=ghcr.io/epics-containers
+ARG RUNTIME=${REGISTRY}/epics-base${IMAGE_EXT}-runtime:7.0.10ec2
+ARG DEVELOPER=${REGISTRY}/epics-base${IMAGE_EXT}-developer:7.0.10ec2
+
+#FROM ghcr.io/diamondlightsource/ubuntu-devcontainer:noble AS developer
+FROM  ${DEVELOPER} AS developer
 
 # Add any system dependencies for the developer/build environment here
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
@@ -25,7 +30,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 
 # The runtime stage copies the built venv into a runtime container
-FROM ubuntu:noble AS runtime
+#FROM ubuntu:noble AS runtime
+FROM ${RUNTIME} AS runtime
 
 # Add apt-get system dependencies for runtime here if needed
 # RUN apt-get update -y && apt-get install -y --no-install-recommends \

@@ -2,27 +2,33 @@
 
 # FastCS Gatan
 
-Control system integration for Gatan K3 detectors using [FastCS](https://github.com/DiamondLightSource/fastcs), modeled on [fastcs-eiger](https://github.com/DiamondLightSource/fastcs-eiger).
+A Gatan K3 detector driver in [FastCS](https://github.com/DiamondLightSource/fastcs), acting as a client to the SerialEMCCD plugin on the DigitalMicrograph (DM) computer. Modeled on [fastcs-eiger](https://github.com/DiamondLightSource/fastcs-eiger).
 
-**Status: scaffold only.** The controller/attribute shape is in place; the
-GatanSocket wire-protocol client
-(`src/fastcs_gatan/connection/gatan_socket.py`) is not implemented yet — see
-that module's docstring for the plan and `CLAUDE.md` for the full scope
-decision.
+**Status: in development, not yet tested on hardware.** Tested against unit
+tests and GatanDetectorClient's mock server only.
 
-fastcs-gatan speaks the TCP/IP "GatanSocket" protocol used by the
-SerialEMCCD DigitalMicrograph plugin directly — it does **not** depend on
+- **Working**: connection and status (DM/plugin version, last error, dose
+  rate); camera enumeration, selection, insertion and retraction; read mode
+  and K2/K3 parameters; single-frame acquisition; dose-fractionated
+  acquisition with frames saved on the DM computer only (the driver gets back
+  a summed image, the saved-frame count and the file path).
+- **Not yet implemented**: continuous acquisition.
+
+See [Example 1](docs/examples/01_dose_fractionation.md) for running a
+dose-fractionated exposure over REST and EPICS against the mock server.
+
+fastcs-gatan implements the TCP/IP "GatanSocket" protocol of the SerialEMCCD
+plugin itself. It does **not** depend on
 [`GatanDetectorClient`](https://github.com/DiamondLightSource) as a package,
-though that project's `gatan_socket.py` (Apache-2.0) is the porting basis for
-this repo's own implementation, cross-checked against the MIT-licensed
-client-side protocol code in
-[SerialEM](https://github.com/mastcu/SerialEM).
+though that project's `gatan_socket.py` (Apache-2.0) is the porting basis.
+Calls are cross-checked against the MIT-licensed client code in
+[SerialEM](https://github.com/mastcu/SerialEM); the K2/K3 parameter and
+frame-saving calls were also checked against how the
+[SerialEMCCD](https://github.com/mastcu/SerialEMCCD) plugin unpacks them
+(GPL-2, read only, no code copied).
 
-Supported acquisition modes (v1 scope): single-frame acquisition, continuous
-acquisition, and dose-fractionation where sub-frames are written to storage
-on the server (DM) side only — never transferred over the socket. Also in
-scope: full camera enumeration/selection/insertion and full K2/K3
-read-mode/parameter select+query support.
+Out of scope for now: dark/gain reference acquisition, DM scripting,
+DigiScan/STEM and frame alignment.
 
 Source          | <https://github.com/DiamondLightSource/fastcs-gatan>
 :---:           | :---:
