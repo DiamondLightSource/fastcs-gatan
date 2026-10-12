@@ -10,15 +10,14 @@ Copyright 2026 Kyle Dent; see this repo's ``NOTICE`` file), cross-checked
 against the MIT-licensed ``/workspaces/SerialEM/BaseSocket.cpp`` +
 ``GatanSocket.cpp`` + ``Shared/SEMCCDDefines.h``.
 
-Scope implemented here (2026-08-17 session): connection management, status/
-capability queries, camera enumeration/selection/insertion, read-mode and
-basic shutter/settling configuration, and single-frame acquisition
-(``get_acquired_image``). **Not yet implemented**: K2/K3 parameter
-configuration (``set_k2_parameters2``), continuous acquisition
-(``stop_continuous_camera`` and the streaming loop), and dose-fractionation
-with server-side-only frame saving (``setup_file_saving2``,
-``get_file_save_result``) — those remain ``NotImplementedError`` stubs for a
-future session.
+Scope implemented here: connection management, status/capability queries,
+camera enumeration/selection/insertion, read-mode and basic shutter/settling
+configuration, single-frame acquisition (``get_acquired_image``), K2/K3
+parameter configuration (``set_k2_parameters2``), and dose-fractionation with
+server-side-only frame saving (``setup_file_saving2``,
+``get_file_save_result``). **Not yet implemented**: continuous acquisition
+(``stop_continuous_camera`` and the streaming loop) — still a
+``NotImplementedError`` stub.
 
 Wire format:
 
@@ -38,10 +37,13 @@ Wire format:
 
 from __future__ import annotations
 
+import contextlib
 import enum
+import ntpath
 import socket
 import struct
-from collections.abc import Sequence
+import threading
+from collections.abc import Iterable, Iterator, Sequence
 
 
 class FunctionCode(enum.IntEnum):
@@ -86,6 +88,14 @@ USE_BEAM_BLANK, USE_FILM_SHUTTER, USE_DUAL_SHUTTER = 0, 1, 2
 K2_LINEAR_MODE, K2_COUNTING_MODE, K2_SUPERRES_MODE = 0, 1, 2
 K3_LINEAR_SET_MODE, K3_COUNTING_SET_MODE = 3, 4
 
+# one uncompressed MRC stack, ``<save_dir>\<root_name>.mrc``.
+# one uncompressed MRC stack, ``<save_dir>\\<root_name>.mrc``.
+K2_SAVE_RAW_PACKED = 1 << 0
+K2_SAVE_LZW_TIFF = 1 << 3
+K2_SAVE_ZIP_TIFF = 1 << 4
+K2_SAVE_SYNCHRON = 1 << 5
+K2_MRCS_EXTENSION = 1 << 16
+
 # Error codes (Shared/SEMCCDDefines.h, first enum). 0 == success.
 SEMCCD_ERRORS = {
     1: "IMAGE_NOT_FOUND",
@@ -104,7 +114,58 @@ SEMCCD_ERRORS = {
     14: "SAVEDIR_IS_FILE",
     15: "DIR_NOT_WRITABLE",
     16: "FILE_ALREADY_EXISTS",
+    17: "QUIT_DURING_SAVE",
+    18: "OPEN_DEFECTS_ERROR",
+    19: "WRITE_DEFECTS_ERROR",
+    20: "THREAD_ERROR",
+    21: "EARLY_RET_WITH_SYNC",
+    22: "CONTINUOUS_ENDED",
+    23: "BAD_SUM_LIST",
+    24: "BAD_ANTIALIAS_PARAM",
+    25: "CLIENT_SCRIPT_ERROR",
+    26: "GENERAL_SCRIPT_ERROR",
 }
+
+
+def pack_string_as_longs(s: str) -> tuple[int, bytes]:
+    """Pack one NUL-terminated string into a long array.
+
+    Returns ``(count_in_longs, bytes)``; ``count == len // 4 + 1`` so there is
+    always room for the terminator.
+    """
+    raw = s.encode("ascii", "replace")
+    count = len(raw) // 4 + 1
+    return count, raw.ljust(count * 4, b"\x00")
+
+
+def pack_strings_concat(strings: Iterable[str]) -> tuple[int, bytes]:
+    """Pack several NUL-terminated strings back-to-back into a long array,
+    padded to a 4-byte boundary — the ``names`` layout ``SetupFileSaving2``
+    expects. Returns ``(count_in_longs, bytes)``."""
+    blob = b"".join(s.encode("ascii", "replace") + b"\x00" for s in strings)
+    if len(blob) % 4:
+        blob += b"\x00" * (4 - len(blob) % 4)
+    return len(blob) // 4, blob
+
+
+def saved_frames_path(
+    save_dir: str, root_name: str, flags: int = 0, file_per_image: bool = False
+) -> str:
+    """Where the plugin writes frames for a given ``SetupFileSaving2`` call.
+
+    The path is on the DM (Windows) machine. Mirrors how SerialEM composes
+    ``mPathForFrames`` (``CameraController.cpp``): a stack file
+    ``<dir>\\<root>.<ext>``, or with ``file_per_image`` a directory
+    ``<dir>\\<root>`` of per-frame files.
+    """
+    base = ntpath.join(save_dir, root_name)
+    if file_per_image:
+        return base + "\\"
+    if flags & (K2_SAVE_LZW_TIFF | K2_SAVE_ZIP_TIFF):
+        return base + ".tif"
+    if flags & K2_MRCS_EXTENSION:
+        return base + ".mrcs"
+    return base + ".mrc"
 
 
 class GatanSocketError(RuntimeError):
@@ -135,6 +196,9 @@ class GatanSocketConnection:
         self.timeout = timeout
         self.acq_timeout = acq_timeout
         self._sock: socket.socket | None = None
+        # Guards the socket so a long acquisition running in a worker thread
+        # can't have another call's bytes interleaved into its exchange.
+        self._lock = threading.RLock()
 
     # ---- Connection ----
     def connect(self) -> None:
@@ -160,6 +224,26 @@ class GatanSocketConnection:
 
     def __exit__(self, *exc: object) -> None:
         self.disconnect()
+
+    @contextlib.contextmanager
+    def exclusive(self) -> Iterator[None]:
+        """Hold the connection for a multi-call sequence.
+
+        Calls from the holding thread proceed; calls from any other thread
+        fail fast with :class:`GatanSocketError` instead of blocking (so an
+        event loop is never stalled behind a long exposure).
+        """
+        with self._claim():
+            yield
+
+    @contextlib.contextmanager
+    def _claim(self) -> Iterator[None]:
+        if not self._lock.acquire(blocking=False):
+            raise GatanSocketError("connection busy with another operation")
+        try:
+            yield
+        finally:
+            self._lock.release()
 
     # ---- Low-level wire helpers ----
     def _socket(self) -> socket.socket:
@@ -213,10 +297,11 @@ class GatanSocketConnection:
         status long. Returns ``(status, longs, bools, doubles)`` where
         ``longs`` excludes the status word.
         """
-        sock = self._socket()
-        sock.sendall(self._pack_request(func_code, longs, bools, doubles, array))
-        total = struct.unpack("<i", self._recv_exact(4))[0]
-        rest = self._recv_exact(total - 4)
+        with self._claim():
+            sock = self._socket()
+            sock.sendall(self._pack_request(func_code, longs, bools, doubles, array))
+            total = struct.unpack("<i", self._recv_exact(4))[0]
+            rest = self._recv_exact(total - 4)
 
         n_long = n_long_ret + 1  # +1 for the status word
         off = 0
@@ -240,6 +325,19 @@ class GatanSocketConnection:
 
         Returns ``(width, height, raw_bytes)``.
         """
+        with self._claim():
+            return self._exchange_image_locked(
+                func_code, longs, doubles, array, bytes_per_pixel
+            )
+
+    def _exchange_image_locked(
+        self,
+        func_code: int,
+        longs: Sequence[int],
+        doubles: Sequence[float],
+        array: bytes,
+        bytes_per_pixel: int,
+    ) -> tuple[int, int, bytes]:
         sock = self._socket()
         old_timeout = sock.gettimeout()
         sock.settimeout(self.acq_timeout)
@@ -250,15 +348,16 @@ class GatanSocketConnection:
             n = len(rest) // 4
             vals = struct.unpack_from(f"<{n}i", rest, 0)
             status = vals[0]
-            if n < 5:
-                raise GatanSocketError(
-                    f"image call {func_code} returned a short reply "
-                    f"({n} longs, need at least 5)"
-                )
+            # An error reply carries only the status word, so check it first.
             if status != 0:
                 name = SEMCCD_ERRORS.get(abs(status), "unknown")
                 raise GatanSocketError(
                     f"image call {func_code} failed: status {status} ({name})"
+                )
+            if n < 5:
+                raise GatanSocketError(
+                    f"image call {func_code} returned a short reply "
+                    f"({n} longs, need at least 5)"
                 )
             arr_size, width, height, num_chunks = vals[1], vals[2], vals[3], vals[4]
             num_bytes = arr_size * bytes_per_pixel
@@ -383,11 +482,29 @@ class GatanSocketConnection:
         save_frames: bool,
         rotation_flip: int,
         flags: int,
+        dummy1: float = 0.0,
+        dummy2: float = 0.0,
+        dummy3: float = 0.0,
+        dummy4: float = 0.0,
+        filter_name: str = "",
     ) -> None:
-        raise NotImplementedError(
-            "K2/K3 parameter configuration is deferred — out of scope for "
-            "this session's single-acquisition + mode-selection work"
+        """``GS_SetK2Parameters2``. ``frame_time`` is seconds per saved
+        sub-frame; the plugin fractionates an exposure into
+        ``round(exposure / frame_time)`` frames when ``dose_frac`` is set.
+
+        Wire order: longs[read_mode, hardware_proc, rotation_flip, flags,
+        filt_size], bools[dose_frac, align_frames, save_frames],
+        doubles[scaling, frame_time, dummy1..4], array[filter_name].
+        """
+        filt_size, filt_buf = pack_string_as_longs(filter_name)
+        status, *_ = self._exchange(
+            FunctionCode.SET_K2_PARAMETERS2,
+            longs=[read_mode, hardware_proc, rotation_flip, flags, filt_size],
+            bools=[dose_frac, align_frames, save_frames],
+            doubles=[scaling, frame_time, dummy1, dummy2, dummy3, dummy4],
+            array=filt_buf,
         )
+        self._check(status, "SetK2Parameters2")
 
     # ---- Acquisition: single-frame (and, with continuous bits OR'd into
     # `processing`, continuous — but the continuous streaming loop itself is
@@ -459,14 +576,43 @@ class GatanSocketConnection:
         flags: int,
         save_dir: str,
         root_name: str,
+        extra_strings: Sequence[str] = (),
+        dummy1: float = 0.0,
+        dummy2: float = 0.0,
+        dummy3: float = 0.0,
+        dummy4: float = 0.0,
     ) -> int:
-        raise NotImplementedError(
-            "dose-fractionation-to-disk is deferred — out of scope for this "
-            "session's single-acquisition + mode-selection work"
+        """``GS_SetupFileSaving2``: where and how the plugin writes frames.
+
+        ``save_dir`` is a path on the DM machine; the plugin creates it if
+        needed and backs up an existing ``<root_name>`` file to ``...~``.
+        ``extra_strings`` must follow the flag-dependent order the plugin
+        parses (gain-ref path, defects, ...) — none are needed with
+        ``flags=0``. Returns the plugin's error word (0 == OK; see
+        ``SEMCCD_ERRORS``).
+
+        Wire order: longs[rotation_flip, flags, name_size],
+        bools[file_per_image], doubles[pixel_size, dummy1..4], array[names].
+        """
+        name_size, name_buf = pack_strings_concat([save_dir, root_name, *extra_strings])
+        status, longs, _, _ = self._exchange(
+            FunctionCode.SETUP_FILE_SAVING2,
+            longs=[rotation_flip, flags, name_size],
+            bools=[file_per_image],
+            doubles=[pixel_size, dummy1, dummy2, dummy3, dummy4],
+            array=name_buf,
+            n_long_ret=1,
         )
+        self._check(status, "SetupFileSaving2")
+        return longs[0]
 
     def get_file_save_result(self) -> tuple[int, int]:
-        raise NotImplementedError(
-            "dose-fractionation-to-disk is deferred — out of scope for this "
-            "session's single-acquisition + mode-selection work"
+        """``GS_GetFileSaveResult``: ``(num_saved, error)`` for the last
+        frame-saving acquisition. ``num_saved`` is the frames actually
+        written — the camera silently clamps a too-short frame time, so this
+        can differ from the requested count."""
+        status, longs, _, _ = self._exchange(
+            FunctionCode.GET_FILE_SAVE_RESULT, n_long_ret=2
         )
+        self._check(status, "GetFileSaveResult")
+        return longs[0], longs[1]

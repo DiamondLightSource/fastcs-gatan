@@ -28,6 +28,23 @@
             ]
         },
         {
+            // Synthetic GatanSocket server from GatanDetectorClient (test target
+            // only, not a dependency). --k3 mimics a real K3's quirks.
+            "name": "Gatan: mock server (K3)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "gatan_client.mock_server",
+            "cwd": "/workspaces/GatanDetectorClient-0.1.0",
+            "justMyCode": false,
+            "console": "integratedTerminal",
+            "args": [
+                "--k3",
+                "--port",
+                "48890",
+                "-v"
+            ]
+        },
+        {
             "name": "Debug Unit Test",
             "type": "debugpy",
             "request": "launch",
@@ -37,6 +54,16 @@
                 "debug-test"
             ],
             "console": "integratedTerminal",
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Gatan: mock server + run",
+            "configurations": [
+                "Gatan: mock server (K3)",
+                "Gatan: run"
+            ],
+            "stopAll": true
         }
     ]
 }
