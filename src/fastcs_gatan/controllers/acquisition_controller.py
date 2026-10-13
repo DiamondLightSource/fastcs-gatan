@@ -13,6 +13,7 @@ from __future__ import annotations
 import asyncio
 import enum
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 from fastcs.attributes import AttrR, AttrRW
@@ -26,6 +27,7 @@ from fastcs_gatan.connection.gatan_socket import (
     GatanSocketError,
     saved_frames_path,
 )
+from fastcs_gatan.mrc import next_free_path, write_frame
 
 MODE_GROUP = "ReadMode"
 ACQUIRE_GROUP = "Acquire"
@@ -125,6 +127,16 @@ class AcquisitionController(Controller):
         group=ACQUIRE_GROUP,
         description="Most recently acquired single frame",
     )
+    local_save_dir = AttrRW(
+        String(),
+        initial_value="",
+        group=ACQUIRE_GROUP,
+        description="Save single frames here (IOC host)",
+    )
+    local_save_root = AttrRW(String(), initial_value="frame", group=ACQUIRE_GROUP)
+    local_saved_path = AttrR(
+        String(), group=ACQUIRE_GROUP, description="MRC file of the last single frame"
+    )
 
     # ---- Continuous acquisition ----
     continuous_quality = AttrRW(
@@ -216,7 +228,22 @@ class AcquisitionController(Controller):
             binning=self.binning.get(),
             shutter=self.shutter.get(),
         )
+        if self.local_save_dir.get():
+            # Saved before last_frame is updated, which fails for frames
+            # larger than _MAX_FRAME_SHAPE.
+            await self.local_saved_path.update(self._save_frame(w, h, raw))
         await self._update_last_frame(w, h, raw)
+
+    def _save_frame(self, width: int, height: int, raw: bytes) -> str:
+        directory = Path(self.local_save_dir.get())
+        directory.mkdir(parents=True, exist_ok=True)
+        path = next_free_path(directory, self.local_save_root.get())
+        labels = [
+            f"fastcs-gatan single frame, exposure {self.exposure.get()} s",
+            f"read mode {self.read_mode.get()}, scaling {self.scaling.get()}, "
+            f"processing {self.processing.get()}, binning {self.binning.get()}",
+        ]
+        return str(write_frame(path, width, height, raw, labels))
 
     @command(group=CONTINUOUS_GROUP)
     async def start_continuous(self) -> None:
