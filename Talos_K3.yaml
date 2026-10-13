@@ -8,10 +8,10 @@
 controllers:
   - id: TALOS-K3
     type: fastcs_gatan.GatanController
-    ip: 10.184.8.4               # SerialEMCCD plugin (GatanSocket server)
+    ip: 10.184.8.4 # SerialEMCCD plugin (GatanSocket server)
     port: 48890
 transport:
-  - rest:                        # simplest transport: HTTP on this machine only
+  - rest: # simplest transport: HTTP on this machine only
       host: localhost
       port: 8080
-  # - epicsca: {}                # EPICS PVs later; they are visible on the network
+  - epicsca: {} # EPICS PVs later; they are visible on the network

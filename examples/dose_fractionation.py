@@ -52,27 +52,48 @@ def get(path):
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__,
-                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     ap.add_argument("--id", default="TALOS-K3", help="controller id in the YAML")
     ap.add_argument("--camera", type=int, default=0)
     ap.add_argument("--exposure", type=float, default=0.1, help="total seconds")
-    ap.add_argument("--frame-time", type=float, default=0.013316,
-                    help="seconds per frame (0: use --frames)")
-    ap.add_argument("--frames", type=int, default=None,
-                    help="number of frames, used when --frame-time is 0")
-    ap.add_argument("--save-dir", default=r"X:\DoseFractions\kwd30084",
-                    help="folder on the DM computer")
+    ap.add_argument(
+        "--frame-time",
+        type=float,
+        default=0.013316,
+        help="seconds per frame (0: use --frames)",
+    )
+    ap.add_argument(
+        "--frames",
+        type=int,
+        default=None,
+        help="number of frames, used when --frame-time is 0",
+    )
+    ap.add_argument(
+        "--save-dir",
+        default=r"X:\DoseFractions\kwd30084",
+        help="folder on the DM computer",
+    )
     ap.add_argument("--root", default="fmt_mrc", help="file name root")
-    ap.add_argument("--read-mode", type=int, default=4, help="3=K3 linear, 4=K3 counting")
+    ap.add_argument(
+        "--read-mode", type=int, default=4, help="3=K3 linear, 4=K3 counting"
+    )
     ap.add_argument("--scaling", type=float, default=1.0)
-    ap.add_argument("--no-bin-counting", action="store_true",
-                    help="super-resolution counting frames (2x per axis)")
+    ap.add_argument(
+        "--no-bin-counting",
+        action="store_true",
+        help="super-resolution counting frames (2x per axis)",
+    )
     ap.add_argument("--width", type=int, default=5760)
     ap.add_argument("--height", type=int, default=4092)
     ap.add_argument("--binning", type=int, default=1)
-    ap.add_argument("--processing", type=int, default=2,
-                    help="0=unprocessed 1=dark-subtracted 2=gain-normalised")
+    ap.add_argument(
+        "--processing",
+        type=int,
+        default=2,
+        help="0=unprocessed 1=dark-subtracted 2=gain-normalised",
+    )
     ap.add_argument("--hardware-proc", type=int, default=0)
     ap.add_argument("--shutter", type=int, default=0, help="0=beam blank")
     ap.add_argument("--save-format-flags", type=int, default=0, help="0=MRC stack")
@@ -129,8 +150,8 @@ def main():
     try:
         for path, value in settings.items():
             put(path, value)
-        put(f"/{cam}/select")              # SetCurrentCamera
-        put(f"/{acq}/apply-read-mode")     # SetReadMode
+        put(f"/{cam}/select")  # SetCurrentCamera
+        put(f"/{acq}/apply-read-mode")  # SetReadMode
         t0 = time.monotonic()
         put(f"/{acq}/acquire-dose-fractionated")  # commands live under //<id>/...
     except urllib.error.HTTPError as exc:

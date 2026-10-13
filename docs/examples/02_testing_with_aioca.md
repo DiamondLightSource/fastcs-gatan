@@ -1,10 +1,10 @@
 # Example 2: Testing fastcs-gatan over EPICS with aioca
 
 [`aioca`](https://github.com/DiamondLightSource/aioca) is a Python (asyncio) EPICS
-Channel Access client: `caget`, `caput` and `camonitor` as Python functions. It is
-installed in the development environment, so it can drive fastcs-gatan's PVs where
-the EPICS command-line tools are not available. PV names are explained in
-[Example 1](01_dose_fractionation.md).
+Channel Access client: `caget`, `caput` and `camonitor` as Python functions, so it
+can drive fastcs-gatan's PVs where the EPICS command-line tools are not available.
+It is not a fastcs-gatan dependency; install it with `uv pip install aioca`. PV names
+are explained in [Example 1](01_dose_fractionation.md).
 
 ## Setup
 
@@ -58,6 +58,31 @@ m.close()
 
 A command PV is never reset to 0 after a write, but every write of 1 runs the command
 again. Watch the status PVs (`DoseFracBusy`, `DoseFracState`), not the command PV.
+
+## A dose-fractionated exposure on the Talos K3
+
+`examples/dose_fractionation_aioca.py` is the EPICS version of
+`examples/dose_fractionation.py`. Its defaults are the parameters of
+GatanDetectorClient's `session_runner.sh` step 26, which worked on the real K3
+(counting mode, binned frames, 5760 × 4092, gain-normalised, 0.1 s at 0.013316 s per
+frame = 8 frames, saved to `X:\DoseFractions\kwd30084` as `fmt_mrc`).
+
+```bash
+python -m fastcs_gatan run Talos_K3_ca.yaml          # terminal 1: driver with EPICS CA
+export EPICS_CA_ADDR_LIST=127.0.0.1 EPICS_CA_AUTO_ADDR_LIST=NO
+python examples/dose_fractionation_aioca.py          # terminal 2
+```
+
+The script prints the settings and asks for `ACQUIRE` (`--yes` skips this). It then
+writes the setting PVs, runs the `Camera:Select` and `Acquisition:ApplyReadMode`
+commands, starts `Acquisition:AcquireDoseFractionated`, and watches
+`Acquisition:DoseFracState` with `camonitor` until it reports `DONE` or `FAILED`. A
+command that fails (its PV goes into MAJOR alarm) aborts the script before the
+exposure starts.
+
+On a recording mock server it sends the plugin the same requests as step 26, byte for
+byte, from `SetCurrentCamera` to `GetFileSaveResult`; it then also sends
+`SetK2Parameters2` to switch frame saving off again.
 
 ## A pytest system test
 
