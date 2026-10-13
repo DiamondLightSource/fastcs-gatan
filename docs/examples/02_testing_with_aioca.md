@@ -84,6 +84,35 @@ On a recording mock server it sends the plugin the same requests as step 26, byt
 byte, from `SetCurrentCamera` to `GetFileSaveResult`; it then also sends
 `SetK2Parameters2` to switch frame saving off again.
 
+## A single exposure on the Talos K3
+
+`examples/single_exposure_aioca.py` takes one exposure and has the driver save the
+transferred frame as an MRC file on the driver's machine. Its defaults are the
+parameters of GatanDetectorClient's `session_runner.sh` step 6, the first frame that
+worked on the real K3 (K3 linear, scaling 0.25, gain-normalised, 1024 × 1024, 0.1 s,
+beam-blanked).
+
+```bash
+python -m fastcs_gatan run Talos_K3_ca.yaml          # terminal 1: driver with EPICS CA
+export EPICS_CA_ADDR_LIST=127.0.0.1 EPICS_CA_AUTO_ADDR_LIST=NO
+python examples/single_exposure_aioca.py             # terminal 2
+```
+
+The script asks for `ACQUIRE` (`--yes` skips this), writes the setting PVs and runs
+`Camera:Select`, `Acquisition:ApplyReadMode` and `Acquisition:ApplyK2Parameters`. It
+then writes 1 to `Acquisition:AcquireImage` and waits for the put to complete, which
+happens once the frame is transferred and saved (up to `--timeout`, default 120 s).
+
+The frame goes to `<LocalSaveDir>/<LocalSaveRoot>_NNNN.mrc` (default
+`frames/single_0001.mrc`, then `_0002`, …; never overwritten). The driver writes the
+bytes from the socket unchanged after an MRC header, marked as 16-bit signed like
+GatanDetectorClient's MRC files. The script makes `--save-dir` absolute, since a
+relative path would be resolved in the driver's working directory, and prints
+`Acquisition:LocalSavedPath` at the end.
+
+On a recording mock server it sends the plugin the same requests as step 6, byte for
+byte: `SetCurrentCamera`, `SetReadMode`, `SetK2Parameters2`, `GetAcquiredImage`.
+
 ## A pytest system test
 
 This test starts the mock server and the driver as subprocesses and talks to them
