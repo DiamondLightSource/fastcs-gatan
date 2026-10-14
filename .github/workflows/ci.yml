@@ -5,10 +5,11 @@ on:
     branches:
       - main
     tags:
-      - "*"
+      - '*'
   pull_request:
 
 jobs:
+
   lint:
     uses: ./.github/workflows/_tox.yml
     with:
@@ -18,31 +19,12 @@ jobs:
     strategy:
       matrix:
         runs-on: ["ubuntu-latest"] # can add windows-latest, macos-latest
-        python-version: ["3.11", "3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
       fail-fast: false
     uses: ./.github/workflows/_test.yml
     with:
       runs-on: ${{ matrix.runs-on }}
       python-version: ${{ matrix.python-version }}
-
-  container:
-    needs: test
-    if: always()
-    uses: ./.github/workflows/_container.yml
-    with:
-      publish: ${{ needs.test.result == 'success' }}
-    permissions:
-      contents: read
-      packages: write
-
-  debug_container:
-    needs: [container, test]
-    uses: ./.github/workflows/_debug_container.yml
-    with:
-      publish: ${{ needs.test.result == 'success' }}
-    permissions:
-      contents: read
-      packages: write
 
   docs:
     uses: ./.github/workflows/_docs.yml
@@ -51,14 +33,7 @@ jobs:
 
   dist:
     uses: ./.github/workflows/_dist.yml
-
-  pypi:
-    needs: [dist, test]
-    if: github.ref_type == 'tag'
-    uses: ./.github/workflows/_pypi.yml
-    permissions:
-      id-token: write
-
+  
   release:
     needs: [dist, test, docs]
     if: github.ref_type == 'tag'
