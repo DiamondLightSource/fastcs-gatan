@@ -6,6 +6,7 @@ initialise()`` isn't called here since it needs a live socket.
 
 import asyncio
 import contextlib
+import struct
 import threading
 
 import pytest
@@ -153,3 +154,54 @@ def test_attribute_descriptions_fit_epics_desc_field():
         for name, attr in vars(cls).items():
             if isinstance(attr, Attribute) and attr.description:
                 assert len(attr.description) <= 40, f"{cls.__name__}.{name}"
+
+
+@pytest.mark.asyncio
+async def test_float_settings_keep_full_precision():
+    """fastcs rounds a Float to its ``prec`` (default 2 decimal places); a K3
+    frame time like 0.013316 s must reach the plugin unchanged."""
+    acq = AcquisitionController(_FakeConnection())  # type: ignore[arg-type]
+    await acq.dose_frac_frame_time.put(0.013316, sync_setpoint=True)
+    await acq.dose_frac_exposure.put(0.105, sync_setpoint=True)
+    await acq.scaling.put(0.125, sync_setpoint=True)
+    assert acq.dose_frac_frame_time.get() == 0.013316
+    assert acq.dose_frac_exposure.get() == 0.105
+    assert acq.scaling.get() == 0.125
+
+
+@pytest.mark.asyncio
+async def test_single_frame_saved_as_mrc(tmp_path):
+    """acquire_image writes the transferred bytes unchanged after an MRC
+    header, numbering files so nothing is overwritten."""
+    conn = _FakeConnection()
+    conn.release.set()
+    acq = AcquisitionController(conn)  # type: ignore[arg-type]
+    await acq.width.update(8)
+    await acq.height.update(4)
+    await acq.local_save_dir.update(str(tmp_path / "frames"))
+    await acq.local_save_root.update("single")
+
+    await acq.acquire_image()
+    await acq.acquire_image()
+
+    first = tmp_path / "frames" / "single_0001.mrc"
+    assert (tmp_path / "frames" / "single_0002.mrc").exists()
+    assert acq.local_saved_path.get().endswith("single_0002.mrc")
+    data = first.read_bytes()
+    assert len(data) == 1024 + 2 * 8 * 4
+    assert struct.unpack_from("<4i", data, 0) == (8, 4, 1, 1)  # NX NY NZ MODE
+    assert data[208:212] == b"MAP "
+    assert data[1024:] == bytes(2 * 8 * 4)
+
+
+@pytest.mark.asyncio
+async def test_single_frame_not_saved_without_dir(tmp_path, monkeypatch):
+    conn = _FakeConnection()
+    conn.release.set()
+    acq = AcquisitionController(conn)  # type: ignore[arg-type]
+    await acq.width.update(8)
+    await acq.height.update(4)
+    monkeypatch.chdir(tmp_path)
+    await acq.acquire_image()
+    assert list(tmp_path.iterdir()) == []
+    assert acq.local_saved_path.get() == ""

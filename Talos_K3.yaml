@@ -1,0 +1,17 @@
+# Talos K3: real SerialEMCCD plugin on the DigitalMicrograph (DM) computer.
+#
+# Check before running the driver against it:
+#   * No SerialEM session is using this plugin port; the plugin serves one
+#     client at a time.
+#   * Starting the driver only reads from the plugin (versions, last error,
+#     dose rate, camera count, whether camera 0 is inserted).
+controllers:
+  - id: TALOS-K3
+    type: fastcs_gatan.GatanController
+    ip: 10.184.8.4 # SerialEMCCD plugin (GatanSocket server)
+    port: 48890
+transport:
+  - rest: # simplest transport: HTTP on this machine only
+      host: localhost
+      port: 8080
+  - epicsca: {} # EPICS PVs later; they are visible on the network
