@@ -34,7 +34,7 @@ class GatanController(Controller):
     dm_version = AttrR(Int(), group=STATUS_GROUP)
     plugin_version = AttrR(Int(), group=STATUS_GROUP)
     last_error = AttrR(Int(), group=STATUS_GROUP)
-    last_dose_rate = AttrR(Float(), group=STATUS_GROUP)
+    last_dose_rate = AttrR(Float(prec=6), group=STATUS_GROUP)
 
     def __init__(self, connection_settings: IPConnectionSettings) -> None:
         super().__init__()
