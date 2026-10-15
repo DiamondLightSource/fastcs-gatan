@@ -3,8 +3,8 @@ kind: Component
 metadata:
   name: fastcs-gatan
   title: fastcs-gatan
-  description: Gatan K3 detector driver in FastCS, acting as a client to the SerialEMCCD plugin on the DigitalMicrograph computer
+  description: Gatan K3 FastCS driver using the serialEMCCD plugin API
 spec:
   type: service
   lifecycle: experimental
-  owner: user:TODO # set to the actual component owner before this is registered
+  owner: group:default/beamline-controls

@@ -5,10 +5,12 @@ on:
     branches:
       - main
     tags:
-      - "*"
+      - '*'
   pull_request:
+  workflow_dispatch:
 
 jobs:
+
   lint:
     uses: ./.github/workflows/_tox.yml
     with:
@@ -18,7 +20,7 @@ jobs:
     strategy:
       matrix:
         runs-on: ["ubuntu-latest"] # can add windows-latest, macos-latest
-        python-version: ["3.11", "3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
       fail-fast: false
     uses: ./.github/workflows/_test.yml
     with:
@@ -29,15 +31,6 @@ jobs:
     needs: test
     if: always()
     uses: ./.github/workflows/_container.yml
-    with:
-      publish: ${{ needs.test.result == 'success' }}
-    permissions:
-      contents: read
-      packages: write
-
-  debug_container:
-    needs: [container, test]
-    uses: ./.github/workflows/_debug_container.yml
     with:
       publish: ${{ needs.test.result == 'success' }}
     permissions:
