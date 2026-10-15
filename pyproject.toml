@@ -62,7 +62,11 @@ addopts = """
     --tb=native -vv --doctest-modules --doctest-glob="*.rst"
     """
 # https://iscinumpy.gitlab.io/post/bound-version-constraints/#watch-for-warnings
-filterwarnings = "error"
+filterwarnings = [
+    "error",
+    # fastcs 0.14.4 still uses this on Python 3.14; drop once fastcs is fixed
+    "ignore:'asyncio.iscoroutinefunction' is deprecated:DeprecationWarning",
+]
 # Doctest python code in docs, python code in src docstrings, test functions in tests
 testpaths = "docs src tests"
 
