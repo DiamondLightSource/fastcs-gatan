@@ -14,7 +14,7 @@ classifiers = [
 ]
 description = "Gatan K3 FastCS driver using the serialEMCCD plugin API"
 dependencies = [
-    "fastcs[epicsca]",
+    "fastcs[epicsca,rest]",
     "numpy",
 ]
 dynamic = ["version"]
