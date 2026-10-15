@@ -3,6 +3,8 @@ on:
 
 jobs:
   upload:
+    # PyPI publishing disabled until the project is ready; remove this line to re-enable
+    if: false
     runs-on: ubuntu-latest
     environment: release
 
