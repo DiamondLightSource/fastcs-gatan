@@ -1,5 +1,5 @@
 # Talos K3 over EPICS Channel Access, for examples/dose_fractionation_aioca.py.
-# Same camera as Talos_K3.yaml (which serves REST only).
+# Same camera as Talos_K3.yaml. Also serves REST on this machine only.
 #
 # Check before running the driver against it:
 #   * No SerialEM session is using this plugin port; the plugin serves one
@@ -13,4 +13,7 @@ controllers:
     ip: 10.184.8.4               # SerialEMCCD plugin (GatanSocket server)
     port: 48890
 transport:
+  - rest:
+      host: localhost
+      port: 8080
   - epicsca: {}
