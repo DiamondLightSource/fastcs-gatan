@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Architecture &#8212; fastcs-gatan 0.0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'explanations/architecture';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/fastcs-gatan/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.0.1';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="icon" href="../_static/dls-logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Architectural Decision Records" href="decisions.html" />
+    <link rel="prev" title="Explanations" href="../explanations.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.0.1" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/dls-logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/dls-logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">fastcs-gatan</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../how-to.html">
+    How-to Guides
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../explanations.html">
+    Explanations
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/fastcs-gatan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/fastcs-gatan" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-cube fa-lg" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../how-to.html">
+    How-to Guides
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../explanations.html">
+    Explanations
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/fastcs-gatan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/fastcs-gatan" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-cube fa-lg" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Architecture</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="decisions.html">Architectural Decision Records</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="decisions/0001-record-architecture-decisions.html">1. Record architecture decisions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decisions/0002-switched-to-python-copier-template.html">2. Adopt python-copier-template for project structure</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../explanations.html" class="nav-link">Explanations</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Architecture</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">#</a></h1>
+<section id="design-principle-mirror-the-serialemccd-plugin">
+<h2>Design principle: mirror the SerialEMCCD plugin<a class="headerlink" href="#design-principle-mirror-the-serialemccd-plugin" title="Link to this heading">#</a></h2>
+<p>fastcs-gatan does not talk to the camera or to DigitalMicrograph (DM)
+directly. It is a client of the <a class="reference external" href="https://github.com/mastcu/SerialEMCCD">SerialEMCCD</a>
+plugin, which runs inside DM on the camera PC and offers DM’s camera
+control over a TCP socket (the “GatanSocket” protocol, port 48890). SerialEM
+uses the same plugin and protocol.</p>
+<p>So the driver is shaped by what the plugin offers. The plugin’s interface
+(<code class="docutils literal notranslate"><span class="pre">IDMCamera</span></code> in <code class="docutils literal notranslate"><span class="pre">SerialEMCCD.idl</span></code>; the socket calls in <code class="docutils literal notranslate"><span class="pre">SocketPathway.cpp</span></code>)
+falls into a few capability areas: version and diagnostics, camera selection
+and insertion, read mode and K2/K3 parameters, image acquisition, frame
+saving, and a few others. fastcs-gatan has one attribute group per area it
+covers, and each attribute is either an argument or a result of a plugin
+call, or a small driver-only helper around one. <a class="reference internal" href="../reference/attributes.html"><span class="doc">Attributes</span></a>
+lists them all in these groups; <a class="reference internal" href="../reference/plugin-calls.html"><span class="doc">SerialEMCCD plugin calls</span></a> lists the
+calls.</p>
+</section>
+<section id="layers">
+<h2>Layers<a class="headerlink" href="#layers" title="Link to this heading">#</a></h2>
+<div class="graphviz"><object data="../_images/graphviz-25e87b599fa62c7912227d02cd3af01611fef164.svg" type="image/svg+xml" class="graphviz">
+<p class="warning">digraph architecture {
+    rankdir=TB;
+    node [shape=box, fontname=&quot;sans-serif&quot;, fontsize=10];
+    edge [fontname=&quot;sans-serif&quot;, fontsize=9];
+
+    subgraph cluster_clients {
+        label=&quot;Clients&quot;; style=dashed;
+        epics [label=&quot;EPICS CA clients\n(Phoebus, aioca, caget)&quot;];
+        rest  [label=&quot;REST clients\n(HTTP, port 8080)&quot;];
+    }
+
+    subgraph cluster_driver {
+        label=&quot;fastcs-gatan (this driver)&quot;;
+
+        subgraph cluster_transports {
+            label=&quot;fastcs transports&quot;; style=dotted;
+            t_ca   [label=&quot;EpicsCATransport&quot;];
+            t_rest [label=&quot;RestTransport&quot;];
+        }
+
+        subgraph cluster_controllers {
+            label=&quot;Controllers and attribute groups&quot;; style=rounded;
+            root   [label=&quot;GatanController\nStatus&quot;];
+            camera [label=&quot;camera: CameraController\n(selection) | Insertion&quot;];
+            acq    [label=&quot;acquisition: AcquisitionController\nReadMode | Acquire | Continuous | FrameSaving&quot;];
+        }
+
+        conn [label=&quot;GatanSocketConnection\n(one GS_* request at a time)&quot;];
+    }
+
+    subgraph cluster_dm {
+        label=&quot;DM PC&quot;; style=dashed;
+        plugin [label=&quot;SerialEMCCD plugin\nGatanSocket server, port 48890&quot;];
+        dm     [label=&quot;DigitalMicrograph\n+ K3 camera&quot;];
+    }
+
+    epics -&gt; t_ca;
+    rest  -&gt; t_rest;
+    t_ca -&gt; root; t_rest -&gt; root;
+    root -&gt; camera; root -&gt; acq;
+    root -&gt; conn; camera -&gt; conn; acq -&gt; conn;
+    conn -&gt; plugin [label=&quot;TCP&quot;];
+    plugin -&gt; dm;
+}</p></object></div>
+<p>From top to bottom:</p>
+<ul class="simple">
+<li><p><strong>Transports</strong> (from fastcs) publish every attribute as an EPICS PV and a
+REST endpoint. The YAML config passed to <code class="docutils literal notranslate"><span class="pre">fastcs-gatan</span> <span class="pre">run</span></code> chooses which
+transports start.</p></li>
+<li><p><strong>Controllers</strong> hold the attributes and commands. <code class="docutils literal notranslate"><span class="pre">GatanController</span></code> is the
+root; it connects at startup, reads the version and status values, and
+adds two sub-controllers: <code class="docutils literal notranslate"><span class="pre">camera</span></code> and <code class="docutils literal notranslate"><span class="pre">acquisition</span></code>. The group names
+(Status, Insertion, ReadMode, …) organise the EPICS screens.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GatanSocketConnection</span></code></strong> turns each method call into one plugin call
+over TCP and decodes the reply.</p></li>
+<li><p><strong>The plugin</strong> runs each call in DM: some directly through DM’s C++ API,
+some by generating and running a DM script.</p></li>
+</ul>
+</section>
+<section id="from-attribute-group-to-plugin-call">
+<h2>From attribute group to plugin call<a class="headerlink" href="#from-attribute-group-to-plugin-call" title="Link to this heading">#</a></h2>
+<div class="graphviz"><object data="../_images/graphviz-22ce0172701e218881d47b09cb0631e3704fe9f8.svg" type="image/svg+xml" class="graphviz">
+<p class="warning">digraph groups {
+    rankdir=LR;
+    node [shape=box, fontname=&quot;sans-serif&quot;, fontsize=10];
+    edge [fontname=&quot;sans-serif&quot;, fontsize=9];
+
+    subgraph cluster_groups {
+        label=&quot;fastcs-gatan attribute groups&quot;;
+        status  [label=&quot;Status&quot;];
+        cam     [label=&quot;camera\n+ Insertion&quot;];
+        readm   [label=&quot;ReadMode&quot;];
+        acquire [label=&quot;Acquire\n(exposure parameters)&quot;];
+        single  [label=&quot;single image\n(acquire_image)&quot;];
+        cont    [label=&quot;Continuous\n(not implemented)&quot;];
+        saving  [label=&quot;FrameSaving\n(dose fractionation)&quot;];
+    }
+
+    subgraph cluster_calls {
+        label=&quot;SerialEMCCD plugin calls&quot;;
+        c_ver   [label=&quot;GetDMVersion\nGetPluginVersion\nGetLastError\nGetLastDoseRate&quot;];
+        c_cam   [label=&quot;GetNumberOfCameras\nSetCurrentCamera\nIsCameraInserted\nInsertCamera&quot;];
+        c_k2    [label=&quot;SetReadMode\nSetK2Parameters2&quot;];
+        c_acq   [label=&quot;GetAcquiredImage&quot;, style=bold];
+        c_stop  [label=&quot;StopContinuousCamera&quot;];
+        c_save  [label=&quot;SetupFileSaving2\nGetFileSaveResult&quot;];
+    }
+
+    status -&gt; c_ver;
+    cam -&gt; c_cam;
+    readm -&gt; c_k2;
+    acquire -&gt; c_acq [style=dashed, label=&quot;arguments&quot;];
+    single -&gt; c_acq;
+    cont -&gt; c_acq; cont -&gt; c_stop;
+    saving -&gt; c_k2; saving -&gt; c_save; saving -&gt; c_acq;
+}</p></object></div>
+<p><code class="docutils literal notranslate"><span class="pre">GetAcquiredImage</span></code> is the plugin’s one acquisition call. Single images,
+continuous acquisition and dose fractionation all go through it; what it
+does depends on its <code class="docutils literal notranslate"><span class="pre">processing</span></code> argument and on the frame-saving state set
+by <code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code> before it (see <a class="reference internal" href="../reference/attributes.html"><span class="doc">Attributes</span></a>,
+“Exposure parameters”). The parameters it shares between the three modes
+(size, exposure, binning, processing, shutter) are in group Acquire.</p>
+<p>Plugin areas fastcs-gatan does not cover: DM scripting, dark/gain
+references and defect lists, frame alignment, DigiScan/STEM, and the
+shutter and settling calls (implemented on the connection, but with no
+attributes yet).</p>
+</section>
+<section id="driver-only-attributes">
+<h2>Driver-only attributes<a class="headerlink" href="#driver-only-attributes" title="Link to this heading">#</a></h2>
+<p>Some attributes have no plugin counterpart. They make the plugin calls
+usable from EPICS and REST:</p>
+<ul class="simple">
+<li><p><strong>Insertion polling:</strong> <code class="docutils literal notranslate"><span class="pre">insertion_timeout</span></code>, <code class="docutils literal notranslate"><span class="pre">insertion_poll_period</span></code>.
+Moving the camera takes about 10 s, so <code class="docutils literal notranslate"><span class="pre">insert</span></code> and <code class="docutils literal notranslate"><span class="pre">retract</span></code> poll
+<code class="docutils literal notranslate"><span class="pre">IsCameraInserted</span></code> until the state changes or the timeout runs out.</p></li>
+<li><p><strong>Dose-fractionation status:</strong> <code class="docutils literal notranslate"><span class="pre">dose_frac_state</span></code>, <code class="docutils literal notranslate"><span class="pre">dose_frac_busy</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dose_frac_message</span></code>. A dose-fractionated exposure runs in the background,
+so clients need a way to see it finish; <code class="docutils literal notranslate"><span class="pre">saved_path</span></code> is worked out from
+the saving settings, following the plugin’s file naming.</p></li>
+<li><p><strong>Dose-fractionation inputs:</strong> <code class="docutils literal notranslate"><span class="pre">dose_frac_num_frames</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dose_frac_exposure</span></code>, <code class="docutils literal notranslate"><span class="pre">dose_frac_frame_time</span></code>. The driver turns them into
+the plugin’s exposure time and frame time.</p></li>
+<li><p><strong>Local saving of single images:</strong> <code class="docutils literal notranslate"><span class="pre">local_save_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">local_save_root</span></code>,
+<code class="docutils literal notranslate"><span class="pre">local_saved_path</span></code> write each single image as an MRC file on the driver’s
+machine.</p></li>
+</ul>
+</section>
+<section id="connection-and-threading">
+<h2>Connection and threading<a class="headerlink" href="#connection-and-threading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>One client at a time.</strong> The plugin serves one socket client: when a new
+client connects, it closes the existing one
+(<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/SocketPathway.cpp#L350-L359"><code class="docutils literal notranslate"><span class="pre">SocketPathway.cpp</span></code> lines 350-359</a>).
+Never run fastcs-gatan against a plugin that SerialEM is using.</p></li>
+<li><p><strong>One call at a time.</strong> The connection sends one request and waits for its
+reply. Multi-call sequences (dose fractionation) hold the connection with
+<code class="docutils literal notranslate"><span class="pre">exclusive()</span></code> so nothing can interleave; a call from another thread while
+it is held fails straight away with “connection busy” rather than
+waiting.</p></li>
+<li><p><strong>Blocking calls.</strong> <code class="docutils literal notranslate"><span class="pre">acquire_image</span></code> runs on the driver’s event loop and
+blocks it until the image has arrived, so other attributes don’t update
+during a single exposure and its transfer. The dose-fractionation sequence
+runs in a worker thread instead and reports progress through its status
+attributes.</p></li>
+<li><p><strong>Fail fast.</strong> A broken connection is not retried: the call fails, the
+connection is closed, and the driver needs restarting.</p></li>
+</ul>
+</section>
+<section id="sources">
+<h2>Sources<a class="headerlink" href="#sources" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Plugin behaviour</strong>: the SerialEMCCD source, cited by file and line at
+commit <a class="reference external" href="https://github.com/mastcu/SerialEMCCD/tree/4d6e4b1"><code class="docutils literal notranslate"><span class="pre">4d6e4b1</span></code></a>
+(plugin version 121). SerialEMCCD is GPL-2; fastcs-gatan is Apache-2.0,
+so its code is only cited and its behaviour described, never copied.</p></li>
+<li><p><strong>Wire format and call arguments</strong>: SerialEM’s MIT-licensed
+<code class="docutils literal notranslate"><span class="pre">GatanSocket.cpp</span></code>, <code class="docutils literal notranslate"><span class="pre">BaseSocket.cpp</span></code> and <code class="docutils literal notranslate"><span class="pre">SEMCCDDefines.h</span></code>, checked against
+the plugin’s argument table in <code class="docutils literal notranslate"><span class="pre">SocketPathway.cpp</span></code>. The connection code was
+ported from GatanDetectorClient’s <code class="docutils literal notranslate"><span class="pre">gatan_socket.py</span></code> (Apache-2.0; see the
+<code class="docutils literal notranslate"><span class="pre">NOTICE</span></code> file), but fastcs-gatan does not depend on GatanDetectorClient.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../explanations.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Explanations</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="decisions.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Architectural Decision Records</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design-principle-mirror-the-serialemccd-plugin">Design principle: mirror the SerialEMCCD plugin</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layers">Layers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-attribute-group-to-plugin-call">From attribute group to plugin call</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#driver-only-attributes">Driver-only attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-and-threading">Connection and threading</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sources">Sources</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/DiamondLightSource/fastcs-gatan/edit/0.0.1/docs/explanations/architecture.md">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/explanations/architecture.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
