@@ -7,4 +7,5 @@ Practical step-by-step guides for the more experienced user.
 :glob:
 
 how-to/*
+examples/*
 ```
