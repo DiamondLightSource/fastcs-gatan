@@ -66,6 +66,28 @@ The image is built in three stages; each `FROM ... AS name` starts one:
 
 Docker builds up to the stage named by `--target`, or all of them (ending with the last) if there's no `--target`. Remember this; it explains problem 1.
 
+### The docs: built on every run, published from `main` and tags
+
+The `docs` job (`_docs.yml`) runs on every CI run (pushes to `main`, tags, pull requests, manual runs):
+
+1. **Build:** `tox -e docs`, the same Sphinx build as locally, with warnings treated as errors.
+2. **Upload:** the HTML becomes a workflow artifact called `docs`, downloadable from the run's page on the Actions tab. That's the only way to see a branch's docs before merging.
+3. **Publish**, only when `github.ref_type == 'tag' || github.ref_name == 'main'`:
+   - the HTML is moved into `.github/pages/<name>/`, where `<name>` is the branch or tag (`main/`, `1.0.0/`, ...)
+   - `switcher.json`, which drives the version drop-down in the docs' top bar, gets the new version added
+   - `.github/pages` is pushed to the **`gh-pages` branch** with `keep_files: true`, so older versions stay and each build only replaces its own folder
+
+GitHub Pages then serves `gh-pages` at **https://diamondlightsource.github.io/fastcs-gatan/**. The root `index.html` redirects to `main/`; releases are at `.../fastcs-gatan/<tag>/`.
+
+For this to work:
+
+- **GitHub Pages must be turned on:** repository Settings → Pages → "Deploy from a branch", branch `gh-pages`. The branch only exists after the first publish, so this may need doing right after the first `main` build.
+- **The job must be allowed to push:** `ci.yml` gives `docs` `contents: write`, but an organisation setting can still limit `GITHUB_TOKEN`.
+
+Until `switcher.json` exists online, every docs build prints "Can't read version switcher, is GitHub pages enabled?" (from `docs/conf.py`). It's only a warning printed by `conf.py`, not a Sphinx warning, so it doesn't fail the build.
+
+**State in October 2026:** `origin` has no `gh-pages` branch, so the docs have never been published. `main` has the `docs` job but no Sphinx set-up to build; the first publish should happen when `4_copier_template` is merged.
+
 ## Problem 1: container build failed in CI but worked locally
 
 **Symptom:** the `container` job failed at `uv sync --locked --no-editable --no-dev` with "Failed to build `fastcs-gatan`". The real error was at the very end of the output, below several long setuptools deprecation warnings (those were harmless):
@@ -163,5 +185,5 @@ UV_PROJECT_ENVIRONMENT=/tmp/ci-venv uv sync --locked --no-editable --no-dev
 
 - **PyPI upload** (`pypi` job, tags only) needs a trusted publisher set up on PyPI for this repo, and a GitHub environment called `release` (the job uses `environment: release`).
 - **`fastcs` issue** for the deprecation: drop the `filterwarnings` ignore once fixed.
-- **Launcher (fixed, not yet committed):** the template had replaced `src/fastcs_gatan/__main__.py` with its stub, an `argparse` parser that only knew `--version`, so the driver couldn't be started (CI still passed, because CI only checks `--version`). Restored from `main`, so `schema` and `run <config.yaml>` work again; the template's `tests/test_cli.py` was updated to expect the launcher's `GatanController: <version>` output.
+- **GitHub Pages** must be turned on once the first `main` build has created the `gh-pages` branch (see "The docs" above).
 - The template also removed `fallback_version = "0.0.0"` from `[tool.setuptools_scm]`. CI checks out the full history, so it isn't needed there, but builds without git history (e.g. from a downloaded zip) will now fail to find a version.
