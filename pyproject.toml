@@ -13,7 +13,10 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 description = "Gatan K3 FastCS driver using the serialEMCCD plugin API"
-dependencies = [] # Add project dependencies here, e.g. ["click", "numpy"]
+dependencies = [
+    "fastcs[epicsca]",
+    "numpy",
+]
 dynamic = ["version"]
 license.file = "LICENSE"
 readme = "README.md"
@@ -26,6 +29,7 @@ dev = [
     "pydata-sphinx-theme>=0.12",
     "pyright",
     "pytest",
+    "pytest-asyncio",
     "pytest-cov",
     "ruff",
     "sphinx-autobuild",
