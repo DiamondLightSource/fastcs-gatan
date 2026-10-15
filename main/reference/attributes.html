@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Attributes &#8212; fastcs-gatan 0.1.dev21+gbabd33e70 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../_static/documentation_options.js?v=739ba0c3"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/attributes';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/fastcs-gatan/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'main';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="icon" href="../_static/dls-logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SerialEMCCD plugin calls" href="plugin-calls.html" />
+    <link rel="prev" title="Reference" href="../reference.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="main" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/dls-logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/dls-logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">fastcs-gatan</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../how-to.html">
+    How-to Guides
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../explanations.html">
+    Explanations
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../reference.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/fastcs-gatan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/fastcs-gatan" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-cube fa-lg" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../how-to.html">
+    How-to Guides
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../explanations.html">
+    Explanations
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../reference.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/fastcs-gatan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/fastcs-gatan" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-cube fa-lg" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugin-calls.html">SerialEMCCD plugin calls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_api/fastcs_gatan.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/DiamondLightSource/fastcs-gatan/releases">Release Notes</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../reference.html" class="nav-link">Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Attributes</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="attributes">
+<h1>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h1>
+<p>Attributes and commands grouped by the SerialEMCCD plugin capability they
+belong to. Plugin source references are to
+<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/tree/4d6e4b1">SerialEMCCD at commit <code class="docutils literal notranslate"><span class="pre">4d6e4b1</span></code></a>;
+the calls themselves are listed in <a class="reference internal" href="plugin-calls.html"><span class="doc">SerialEMCCD plugin calls</span></a>.</p>
+<section id="names">
+<h2>Names<a class="headerlink" href="#names" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>EPICS (CA)</p></th>
+<th class="head"><p>REST</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Attribute</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&lt;id&gt;:&lt;SubController&gt;:&lt;Name&gt;</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">GATAN:Acquisition:DoseFracBusy</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/&lt;id&gt;/&lt;sub-controller&gt;/&lt;name&gt;</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">/GATAN/acquisition/dose-frac-busy</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Root attribute</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&lt;id&gt;:&lt;Name&gt;</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">GATAN:DmVersion</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/&lt;id&gt;/&lt;name&gt;</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">/GATAN/dm-version</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Read-write</p></td>
+<td><p>setpoint PV, plus <code class="docutils literal notranslate"><span class="pre">_RBV</span></code> readback</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">{&quot;value&quot;:</span> <span class="pre">...}</span></code>, <code class="docutils literal notranslate"><span class="pre">GET</span></code> to read</p></td>
+</tr>
+<tr class="row-odd"><td><p>Command</p></td>
+<td><p>write <code class="docutils literal notranslate"><span class="pre">1</span></code> to the PV; failure gives a MAJOR alarm</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span></code> to <code class="docutils literal notranslate"><span class="pre">//&lt;id&gt;/...</span></code> (double slash)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;id&gt;</span></code> is the controller id in the YAML config. The PV column in the
+tables below leaves out the <code class="docutils literal notranslate"><span class="pre">&lt;id&gt;:</span></code> prefix.</p>
+<p>The sections follow the plugin’s capability areas. The attribute groups in
+the code (which organise the EPICS screens) don’t always match them; each
+section names the code’s sub-controller and group.</p>
+<p>The “Plugin side” column says whether an attribute is an <em>argument</em> or a
+<em>result</em> of a plugin call, or <em>driver</em> if it exists only in fastcs-gatan.</p>
+</section>
+<section id="version-and-diagnostics">
+<h2>Version and diagnostics<a class="headerlink" href="#version-and-diagnostics" title="Link to this heading">#</a></h2>
+<p>Root controller, group Status. Read once when the driver starts; not polled.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>PV</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Plugin side</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dm_version</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DmVersion</span></code></p></td>
+<td><p>Int, R</p></td>
+<td><p>result of <code class="docutils literal notranslate"><span class="pre">GetDMVersion</span></code></p></td>
+<td><p>DM version number</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plugin_version</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PluginVersion</span></code></p></td>
+<td><p>Int, R</p></td>
+<td><p>result of <code class="docutils literal notranslate"><span class="pre">GetPluginVersion</span></code></p></td>
+<td><p>Plugin API version (<code class="docutils literal notranslate"><span class="pre">SEMCCD_PLUGIN_VERSION</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">last_error</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LastError</span></code></p></td>
+<td><p>Int, R</p></td>
+<td><p>result of <code class="docutils literal notranslate"><span class="pre">GetLastError</span></code></p></td>
+<td><p>Result code of the plugin’s last call (<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/SocketPathway.cpp#L739-L742"><code class="docutils literal notranslate"><span class="pre">SocketPathway.cpp</span></code> L739-L742</a>); 0 = OK, names in <code class="docutils literal notranslate"><span class="pre">SEMCCD_ERRORS</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Also implemented on the connection, but not attributes: <code class="docutils literal notranslate"><span class="pre">GetDMVersionAndBuild</span></code>,
+<code class="docutils literal notranslate"><span class="pre">GetDMCapabilities</span></code>.</p>
+</section>
+<section id="dose-rate">
+<h2>Dose rate<a class="headerlink" href="#dose-rate" title="Link to this heading">#</a></h2>
+<p>Root controller, group Status. A section of its own because the plugin
+has no area it obviously belongs to.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>PV</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Plugin side</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">last_dose_rate</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LastDoseRate</span></code></p></td>
+<td><p>Float, R</p></td>
+<td><p>result of <code class="docutils literal notranslate"><span class="pre">GetLastDoseRate</span></code></p></td>
+<td><p>Dose rate DM reported for the last image, per unbinned pixel per second; 0 if DM couldn’t give one (<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L3997-L4011"><code class="docutils literal notranslate"><span class="pre">TemplatePlugIn.cpp</span></code> L3997-L4011</a>). Read once at startup only, so it does not follow later exposures</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="camera-selection-and-insertion">
+<h2>Camera selection and insertion<a class="headerlink" href="#camera-selection-and-insertion" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">camera</span></code> sub-controller: <code class="docutils literal notranslate"><span class="pre">num_cameras</span></code>, <code class="docutils literal notranslate"><span class="pre">current_camera</span></code> and <code class="docutils literal notranslate"><span class="pre">select</span></code> have
+no group, the rest are in group Insertion. <code class="docutils literal notranslate"><span class="pre">current_camera</span></code> is the camera
+index every call here uses.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>PV</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Plugin side</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_cameras</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera:NumCameras</span></code></p></td>
+<td><p>Int, R</p></td>
+<td><p>result of <code class="docutils literal notranslate"><span class="pre">GetNumberOfCameras</span></code></p></td>
+<td><p>Read at startup</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">current_camera</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera:CurrentCamera</span></code></p></td>
+<td><p>Int ≥ 0, RW, default 0</p></td>
+<td><p>argument of the calls below</p></td>
+<td><p>Only sent to the plugin by <code class="docutils literal notranslate"><span class="pre">select</span></code>, <code class="docutils literal notranslate"><span class="pre">insert</span></code>, <code class="docutils literal notranslate"><span class="pre">retract</span></code> and the <code class="docutils literal notranslate"><span class="pre">inserted</span></code> read</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">select</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera:Select</span></code></p></td>
+<td><p>command</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SetCurrentCamera(current_camera)</span></code></p></td>
+<td><p>The plugin stores the index and uses it when it builds DM scripts for later calls (<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L504">L504</a>). <code class="docutils literal notranslate"><span class="pre">SelectCamera</span></code>, which also runs DM’s camera-selection script straight away (<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L5914">L5914</a>), is on the connection but not used</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">inserted</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera:Inserted</span></code></p></td>
+<td><p>Bool, R</p></td>
+<td><p>result of <code class="docutils literal notranslate"><span class="pre">IsCameraInserted(current_camera)</span></code></p></td>
+<td><p>Read at startup and while <code class="docutils literal notranslate"><span class="pre">insert</span></code>/<code class="docutils literal notranslate"><span class="pre">retract</span></code> wait. Runs a DM script (<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L6754">L6754</a>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">insert</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera:Insert</span></code></p></td>
+<td><p>command</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InsertCamera(current_camera,</span> <span class="pre">true)</span></code></p></td>
+<td><p>Moves real hardware; then polls <code class="docutils literal notranslate"><span class="pre">inserted</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">retract</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera:Retract</span></code></p></td>
+<td><p>command</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InsertCamera(current_camera,</span> <span class="pre">false)</span></code></p></td>
+<td><p>As <code class="docutils literal notranslate"><span class="pre">insert</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">insertion_timeout</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera:InsertionTimeout</span></code></p></td>
+<td><p>Int ≥ 1, RW, default 30</p></td>
+<td><p>driver</p></td>
+<td><p>Seconds <code class="docutils literal notranslate"><span class="pre">insert</span></code>/<code class="docutils literal notranslate"><span class="pre">retract</span></code> wait before failing</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">insertion_poll_period</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera:InsertionPollPeriod</span></code></p></td>
+<td><p>Int ≥ 1, RW, default 1</p></td>
+<td><p>driver</p></td>
+<td><p>Seconds between <code class="docutils literal notranslate"><span class="pre">inserted</span></code> reads while waiting</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="read-mode-and-k2-k3-parameters">
+<h2>Read mode and K2/K3 parameters<a class="headerlink" href="#read-mode-and-k2-k3-parameters" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">acquisition</span></code> sub-controller, group ReadMode. These values are stored in the
+driver and only reach the plugin when a command sends them.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>PV</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Plugin side</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">read_mode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:ReadMode</span></code></p></td>
+<td><p>Int, RW, default 0</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">mode</span></code> of <code class="docutils literal notranslate"><span class="pre">SetReadMode</span></code> and <code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code></p></td>
+<td><p>0 K2 linear, 1 K2 counting, 2 K2 super-resolution, 3 K3 linear, 4 K3 counting; above 4 is treated as 4. The plugin treats <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">&gt;</span> <span class="pre">2</span></code> as a K3, so a K3 needs 3 or 4. Negative = not a direct detector, which turns dose fractionation and frame saving off (<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L5928-L5960">L5928-L5960</a>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">scaling</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:Scaling</span></code></p></td>
+<td><p>Float, RW, default 1.0</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">scaling</span></code> of the same calls</p></td>
+<td><p>Count scaling. In K3 linear mode it also carries the per-frame offset</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hardware_proc</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:HardwareProc</span></code></p></td>
+<td><p>Int, RW, default 0</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">hardwareProc</span></code> of <code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code></p></td>
+<td><p>Hardware correction setting, 0, 2, 4 or 6; the plugin clamps it to 0-6 and maps it onto DM’s hardware corrections (<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L5979-L5980">L5979-L5980</a>, <a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L1281">L1281</a>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">align_frames</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:AlignFrames</span></code></p></td>
+<td><p>Bool, RW, default off</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">alignFrames</span></code> of <code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code></p></td>
+<td><p>DM frame alignment: out of scope, keep off</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rotation_flip</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:RotationFlip</span></code></p></td>
+<td><p>Int, RW, default 0</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">rotationFlip</span></code> of <code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code> and <code class="docutils literal notranslate"><span class="pre">SetupFileSaving2</span></code></p></td>
+<td><p>Rotation/flip code for saved frames; negative leaves the plugin’s value unchanged</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">k2_flags</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:K2Flags</span></code></p></td>
+<td><p>Int, RW, default 0</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">flags</span></code> of <code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code></p></td>
+<td><p>Flag bits; 32 (<code class="docutils literal notranslate"><span class="pre">K2_TAKE_BINNED_FRAMES</span></code>) takes K3 frames binned to physical pixels</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">apply_read_mode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:ApplyReadMode</span></code></p></td>
+<td><p>command</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SetReadMode(read_mode,</span> <span class="pre">scaling)</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">apply_k2_parameters</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:ApplyK2Parameters</span></code></p></td>
+<td><p>command</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SetK2Parameters2(...)</span></code> with the values above and the three below</p></td>
+<td><p>The plugin calls <code class="docutils literal notranslate"><span class="pre">SetReadMode</span></code> itself first (<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L5978">L5978</a>), so this is enough on its own</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Three more <code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code> arguments sit in group FrameSaving in the code.
+Only <code class="docutils literal notranslate"><span class="pre">apply_k2_parameters</span></code> reads them; <code class="docutils literal notranslate"><span class="pre">acquire_dose_fractionated</span></code> sends its
+own values:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>PV</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Plugin side</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dose_frac</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:DoseFrac</span></code></p></td>
+<td><p>Bool, RW, default off</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">doseFrac</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">frame_time</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:FrameTime</span></code></p></td>
+<td><p>Float ≥ 0, RW, default 0.05</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">frameTime</span></code></p></td>
+<td><p>Seconds per sub-frame</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">save_frames</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:SaveFrames</span></code></p></td>
+<td><p>Bool, RW, default off</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">saveFrames</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="exposure-parameters-getacquiredimage-arguments">
+<h2>Exposure parameters (<code class="docutils literal notranslate"><span class="pre">GetAcquiredImage</span></code> arguments)<a class="headerlink" href="#exposure-parameters-getacquiredimage-arguments" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">GetAcquiredImage</span></code> is the plugin’s one acquisition call; single images,
+continuous acquisition and dose fractionation all use it. What one call does
+is decided in <code class="docutils literal notranslate"><span class="pre">TemplatePlugIn::GetImage</span></code>
+(<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L878">L878</a>):
+frame saving is on only if <code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code> turned on both dose
+fractionation and frame saving and <code class="docutils literal notranslate"><span class="pre">SetupFileSaving2</span></code> gave a folder and a
+name (<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L897-L899">L897-L899</a>);
+continuous mode needs <code class="docutils literal notranslate"><span class="pre">processing</span></code> above 7 and frame saving and alignment
+off (<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L972-L988">L972-L988</a>).</p>
+<p>In the code, the parameters below are in <code class="docutils literal notranslate"><span class="pre">acquisition</span></code>, group Acquire, along
+with the single-image attributes.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Set up by</p></th>
+<th class="head"><p>What the plugin does</p></th>
+<th class="head"><p>Sent to fastcs-gatan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Single image</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">processing</span></code> 0-7, frame saving off</p></td>
+<td><p>One exposure; stops continuous mode first if it is running</p></td>
+<td><p>One image per call</p></td>
+</tr>
+<tr class="row-odd"><td><p>Continuous</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">processing</span></code> &gt; 7 (continuous bits), frame saving and alignment off</p></td>
+<td><p>First call starts an acquisition loop in a plugin thread; each later call copies out its newest frame (<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/TemplatePlugIn.cpp#L3587"><code class="docutils literal notranslate"><span class="pre">GetContinuousFrame</span></code>, L3587</a>); <code class="docutils literal notranslate"><span class="pre">StopContinuousCamera</span></code> ends it</p></td>
+<td><p>One image per call; frames the loop takes between calls never leave the DM PC</p></td>
+</tr>
+<tr class="row-even"><td><p>Dose fractionation</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code> (dose fractionation and frame saving on) and <code class="docutils literal notranslate"><span class="pre">SetupFileSaving2</span></code> first</p></td>
+<td><p>One exposure split into sub-frames, written to disk on the DM PC</p></td>
+<td><p>One image: the sum. The sub-frames are never sent</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Every call transfers one full image over the network</strong>, and that is the
+slow part. The plugin sends 2 bytes per pixel in chunks of up to 32 MiB,
+waiting for a handshake from the client after each one
+(<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/SocketPathway.cpp#L37"><code class="docutils literal notranslate"><span class="pre">SocketPathway.cpp</span></code> L37</a>,
+<a class="reference external" href="https://github.com/mastcu/SerialEMCCD/blob/4d6e4b1/SocketPathway.cpp#L849-L878">L849-L878</a>).
+A K3 frame at physical pixel size (5760 × 4092) is 47 MB, two chunks: at
+least 0.4 s at 1 Gbit/s, before any processing time. A super-resolution
+frame would be four times that.</p>
+<p>What <code class="docutils literal notranslate"><span class="pre">GetAcquiredImage</span></code> can do on the plugin side, briefly (✓ = used by
+fastcs-gatan):</p>
+<ul class="simple">
+<li><p>✓ exposure time, binning, processing (unprocessed, dark-subtracted,
+gain-normalised), readout area</p></li>
+<li><p>✓ shutter selection; shutter delay, settling time, divide-by-2 and DM
+correction flags (sent as 0)</p></li>
+<li><p>continuous mode with a quality setting (planned)</p></li>
+<li><p>✓ dose fractionation with frames saved as MRC, MRCS or TIFF (LZW or ZIP)
+on the DM PC; further options such as 4-bit packing, summing frames
+before saving and a gain-normalised sum, set through flag bits</p></li>
+<li><p>early return (send the sum back before saving finishes), deferred sums,
+frame alignment in the plugin, tilt sums: out of scope</p></li>
+</ul>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>PV</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Plugin side</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">width</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:Width</span></code></p></td>
+<td><p>Int ≥ 1, RW, default 1024</p></td>
+<td><p>arguments <code class="docutils literal notranslate"><span class="pre">width</span></code>, <code class="docutils literal notranslate"><span class="pre">right</span></code> (and the array size)</p></td>
+<td><p>Image width in binned pixels; the readout area starts at 0, 0</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">height</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:Height</span></code></p></td>
+<td><p>Int ≥ 1, RW, default 1024</p></td>
+<td><p>arguments <code class="docutils literal notranslate"><span class="pre">height</span></code>, <code class="docutils literal notranslate"><span class="pre">bottom</span></code></p></td>
+<td><p>Image height in binned pixels</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exposure</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:Exposure</span></code></p></td>
+<td><p>Float ≥ 0, RW, default 0.1</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">exposure</span></code></p></td>
+<td><p>Seconds. Single image and continuous; dose fractionation uses <code class="docutils literal notranslate"><span class="pre">dose_frac_exposure</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">binning</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:Binning</span></code></p></td>
+<td><p>Int ≥ 1, RW, default 1</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">binning</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">processing</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:Processing</span></code></p></td>
+<td><p>Int, RW, default 0</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">processing</span></code></p></td>
+<td><p>0 unprocessed, 1 dark-subtracted, 2 gain-normalised. Continuous mode will add its bits on top</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">shutter</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:Shutter</span></code></p></td>
+<td><p>Int, RW, default 0</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">shutter</span></code></p></td>
+<td><p>DM shutter index</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">last_frame</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:LastFrame</span></code></p></td>
+<td><p>Waveform, R</p></td>
+<td><p>result: the image</p></td>
+<td><p>The image from the last call, single or dose-fractionated sum. Up to 4096 × 5760; decoded as unsigned 16-bit (signed/unsigned not settled yet)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="single-image">
+<h2>Single image<a class="headerlink" href="#single-image" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">acquisition</span></code>, group Acquire.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>PV</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Plugin side</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">acquire_image</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:AcquireImage</span></code></p></td>
+<td><p>command</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GetAcquiredImage</span></code> with the exposure parameters</p></td>
+<td><p>Returns when the image has arrived. Uses whatever read mode and K2/K3 parameters the plugin last received</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">local_save_dir</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:LocalSaveDir</span></code></p></td>
+<td><p>String, RW, default empty</p></td>
+<td><p>driver</p></td>
+<td><p>If set, each image is also saved here, on the driver’s machine</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">local_save_root</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:LocalSaveRoot</span></code></p></td>
+<td><p>String, RW, default <code class="docutils literal notranslate"><span class="pre">frame</span></code></p></td>
+<td><p>driver</p></td>
+<td><p>File names are <code class="docutils literal notranslate"><span class="pre">&lt;root&gt;_NNNN.mrc</span></code>; existing files are never overwritten</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">local_saved_path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:LocalSavedPath</span></code></p></td>
+<td><p>String, R</p></td>
+<td><p>driver</p></td>
+<td><p>MRC file of the last saved image</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="continuous">
+<h2>Continuous<a class="headerlink" href="#continuous" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">acquisition</span></code>, group Continuous. Not implemented yet: both commands
+currently fail.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>PV</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Plugin side</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">continuous_quality</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:ContinuousQuality</span></code></p></td>
+<td><p>Int 0-7, RW, default 0</p></td>
+<td><p>bits 3-5 of <code class="docutils literal notranslate"><span class="pre">processing</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">continuous_active</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:ContinuousActive</span></code></p></td>
+<td><p>Bool, R</p></td>
+<td><p>driver</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">start_continuous</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:StartContinuous</span></code></p></td>
+<td><p>command</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GetAcquiredImage</span></code> with the continuous bits, repeatedly</p></td>
+<td><p>Each frame fetched is a full image transfer</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stop_continuous</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:StopContinuous</span></code></p></td>
+<td><p>command</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">StopContinuousCamera</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="dose-fractionation-frames-saved-on-the-dm-pc">
+<h2>Dose fractionation (frames saved on the DM PC)<a class="headerlink" href="#dose-fractionation-frames-saved-on-the-dm-pc" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">acquisition</span></code>, group FrameSaving.</p>
+<p><code class="docutils literal notranslate"><span class="pre">acquire_dose_fractionated</span></code> runs, in a worker thread, with nothing else
+allowed on the connection in between:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code> with dose fractionation and frame saving on, the frame
+time, and frame alignment off</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SetupFileSaving2</span></code> with the folder, name, pixel size and flags (one stack
+file, not one file per frame)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GetAcquiredImage</span></code>: the exposure; the plugin saves the sub-frames and
+returns their sum</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GetFileSaveResult</span></code>: frames saved and saving error</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code> with dose fractionation and frame saving off again</p></li>
+</ol>
+<p>Read mode, scaling, hardware processing, rotation/flip and <code class="docutils literal notranslate"><span class="pre">k2_flags</span></code> come
+from group ReadMode; size, binning, processing and shutter from the exposure
+parameters.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>PV</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Plugin side</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dose_frac_num_frames</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:DoseFracNumFrames</span></code></p></td>
+<td><p>Int ≥ 1, RW, default 40</p></td>
+<td><p>driver input</p></td>
+<td><p>Number of sub-frames</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dose_frac_exposure</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:DoseFracExposure</span></code></p></td>
+<td><p>Float ≥ 0, RW, default 2.0</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">exposure</span></code> of <code class="docutils literal notranslate"><span class="pre">GetAcquiredImage</span></code></p></td>
+<td><p>Total exposure in seconds</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dose_frac_frame_time</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:DoseFracFrameTime</span></code></p></td>
+<td><p>Float ≥ 0, RW, default 0</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">frameTime</span></code> of <code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code></p></td>
+<td><p>Seconds per sub-frame; 0 = exposure / frames. The camera may not reach the requested time, so check <code class="docutils literal notranslate"><span class="pre">frames_saved</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">save_dir</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:SaveDir</span></code></p></td>
+<td><p>String, RW, default empty</p></td>
+<td><p>in the name strings of <code class="docutils literal notranslate"><span class="pre">SetupFileSaving2</span></code></p></td>
+<td><p>Folder <strong>on the DM PC</strong>. Required</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">save_root_name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:SaveRootName</span></code></p></td>
+<td><p>String, RW, default <code class="docutils literal notranslate"><span class="pre">gatan</span></code></p></td>
+<td><p>in the name strings of <code class="docutils literal notranslate"><span class="pre">SetupFileSaving2</span></code></p></td>
+<td><p>File name without extension</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">save_pixel_size</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:SavePixelSize</span></code></p></td>
+<td><p>Float ≥ 0, RW, default 1.0</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">pixelSize</span></code> of <code class="docutils literal notranslate"><span class="pre">SetupFileSaving2</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">save_format_flags</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:SaveFormatFlags</span></code></p></td>
+<td><p>Int, RW, default 0</p></td>
+<td><p>argument <code class="docutils literal notranslate"><span class="pre">flags</span></code> of <code class="docutils literal notranslate"><span class="pre">SetupFileSaving2</span></code></p></td>
+<td><p>0 = uncompressed MRC; 8 LZW TIFF, 16 ZIP TIFF, 65536 <code class="docutils literal notranslate"><span class="pre">.mrcs</span></code> extension</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">acquire_dose_fractionated</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:AcquireDoseFractionated</span></code></p></td>
+<td><p>command</p></td>
+<td><p>the sequence above</p></td>
+<td><p>Returns straight away; watch <code class="docutils literal notranslate"><span class="pre">dose_frac_busy</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dose_frac_busy</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:DoseFracBusy</span></code></p></td>
+<td><p>Bool, R</p></td>
+<td><p>driver</p></td>
+<td><p>True until the sequence ends</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dose_frac_state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:DoseFracState</span></code></p></td>
+<td><p>Enum, R</p></td>
+<td><p>driver</p></td>
+<td><p>Idle, Acquiring, Done or Failed</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dose_frac_message</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:DoseFracMessage</span></code></p></td>
+<td><p>String, R</p></td>
+<td><p>driver</p></td>
+<td><p>Error text, or a note when fewer frames were saved than requested</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">frames_saved</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:FramesSaved</span></code></p></td>
+<td><p>Int, R</p></td>
+<td><p>result <code class="docutils literal notranslate"><span class="pre">numSaved</span></code> of <code class="docutils literal notranslate"><span class="pre">GetFileSaveResult</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">save_error</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:SaveError</span></code></p></td>
+<td><p>Int, R</p></td>
+<td><p>result <code class="docutils literal notranslate"><span class="pre">error</span></code> of <code class="docutils literal notranslate"><span class="pre">GetFileSaveResult</span></code></p></td>
+<td><p>0 = OK, names in <code class="docutils literal notranslate"><span class="pre">SEMCCD_ERRORS</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">saved_path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Acquisition:SavedPath</span></code></p></td>
+<td><p>String, R</p></td>
+<td><p>driver</p></td>
+<td><p>Where the plugin wrote the frames, on the DM PC: <code class="docutils literal notranslate"><span class="pre">&lt;save_dir&gt;\&lt;root&gt;.mrc</span></code>, <code class="docutils literal notranslate"><span class="pre">.mrcs</span></code> or <code class="docutils literal notranslate"><span class="pre">.tif</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="shutter-and-settling">
+<h2>Shutter and settling<a class="headerlink" href="#shutter-and-settling" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SetShutterNormallyClosed</span></code> and <code class="docutils literal notranslate"><span class="pre">SetNoDMSettling</span></code> are implemented on the
+connection but have no attributes yet.</p>
+</section>
+<section id="not-covered">
+<h2>Not covered<a class="headerlink" href="#not-covered" title="Link to this heading">#</a></h2>
+<p>Plugin capabilities fastcs-gatan does not use:</p>
+<ul class="simple">
+<li><p><strong>DM scripting</strong>: <code class="docutils literal notranslate"><span class="pre">ExecuteScript</span></code>, <code class="docutils literal notranslate"><span class="pre">QueueScript</span></code></p></li>
+<li><p><strong>Dark and gain references, defects</strong>: <code class="docutils literal notranslate"><span class="pre">GetDarkReference</span></code>,
+<code class="docutils literal notranslate"><span class="pre">GetGainReference</span></code>, <code class="docutils literal notranslate"><span class="pre">FreeK2GainReference</span></code>, <code class="docutils literal notranslate"><span class="pre">GetDefectList</span></code></p></li>
+<li><p><strong>Frame alignment in the plugin</strong>: <code class="docutils literal notranslate"><span class="pre">SetupFrameAligning</span></code>,
+<code class="docutils literal notranslate"><span class="pre">FrameAlignResults</span></code>, <code class="docutils literal notranslate"><span class="pre">MakeAlignComFile</span></code>, <code class="docutils literal notranslate"><span class="pre">IsGpuAvailable</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ReturnDeferredSum</span></code>, <code class="docutils literal notranslate"><span class="pre">GetTiltSumProperties</span></code>, <code class="docutils literal notranslate"><span class="pre">SaveFrameMdoc</span></code></p></li>
+<li><p><strong>DigiScan/STEM</strong>: <code class="docutils literal notranslate"><span class="pre">GetDSProperties</span></code>, <code class="docutils literal notranslate"><span class="pre">AcquireDSImage</span></code>, <code class="docutils literal notranslate"><span class="pre">ReturnDSChannel</span></code>,
+<code class="docutils literal notranslate"><span class="pre">StopDSAcquisition</span></code></p></li>
+<li><p><strong>Other</strong>: <code class="docutils literal notranslate"><span class="pre">WaitUntilReady</span></code>, <code class="docutils literal notranslate"><span class="pre">SetDMVersion</span></code>, <code class="docutils literal notranslate"><span class="pre">SetDebugMode</span></code></p></li>
+</ul>
+</section>
+<section id="known-limitations">
+<h2>Known limitations<a class="headerlink" href="#known-limitations" title="Link to this heading">#</a></h2>
+<p>As the code stands:</p>
+<ul class="simple">
+<li><p><strong>Continuous acquisition</strong> is not implemented; its commands fail.</p></li>
+<li><p><strong>Group names differ from the plugin areas</strong>: <code class="docutils literal notranslate"><span class="pre">dose_frac</span></code>, <code class="docutils literal notranslate"><span class="pre">frame_time</span></code>
+and <code class="docutils literal notranslate"><span class="pre">save_frames</span></code> are <code class="docutils literal notranslate"><span class="pre">SetK2Parameters2</span></code> arguments but sit in group
+FrameSaving, not ReadMode; group Acquire holds both the shared exposure
+parameters and the single-image attributes.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">last_dose_rate</span></code></strong> and the other Status values are read only at startup.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">last_frame</span></code></strong> is decoded as unsigned 16-bit; whether the plugin’s data
+should be read as signed or unsigned is not settled. Frames larger than
+4096 × 5760 (super-resolution) don’t fit it.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">acquire_image</span></code> blocks the driver</strong> until the image has arrived, so
+nothing else updates meanwhile.</p></li>
+<li><p><strong>Shutter and settling</strong> calls have no attributes, and the shutter delay,
+settling, divide-by-2 and corrections arguments of <code class="docutils literal notranslate"><span class="pre">GetAcquiredImage</span></code> are
+always 0.</p></li>
+<li><p><strong>Plugin version</strong>: the source cited here is plugin version 121; check
+<code class="docutils literal notranslate"><span class="pre">plugin_version</span></code> on the real system, which may run an older plugin.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../reference.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Reference</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="plugin-calls.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">SerialEMCCD plugin calls</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#names">Names</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-and-diagnostics">Version and diagnostics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dose-rate">Dose rate</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#camera-selection-and-insertion">Camera selection and insertion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#read-mode-and-k2-k3-parameters">Read mode and K2/K3 parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exposure-parameters-getacquiredimage-arguments">Exposure parameters (<code class="docutils literal notranslate"><span class="pre">GetAcquiredImage</span></code> arguments)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-image">Single image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous">Continuous</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dose-fractionation-frames-saved-on-the-dm-pc">Dose fractionation (frames saved on the DM PC)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shutter-and-settling">Shutter and settling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#not-covered">Not covered</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#known-limitations">Known limitations</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/DiamondLightSource/fastcs-gatan/edit/main/docs/reference/attributes.md">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/reference/attributes.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
