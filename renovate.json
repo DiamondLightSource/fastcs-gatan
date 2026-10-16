@@ -3,6 +3,7 @@
   "extends": [
     "config:recommended"
   ],
+  "dependencyDashboardApproval": true,
   "lockFileMaintenance": {
     "description": "Keep uv.lock up to date, merging if tests pass",
     "enabled": true,
